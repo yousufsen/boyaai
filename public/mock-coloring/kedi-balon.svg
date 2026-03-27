@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="white"/>
+
+  <!-- Balloon 1 (left) -->
+  <ellipse cx="350" cy="150" rx="70" ry="90" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="340,238 360,238 350,260" stroke="black" stroke-width="3" fill="white"/>
+  <!-- String 1 -->
+  <path d="M350,260 Q340,350 370,420 Q400,480 460,550" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Balloon 2 (center) -->
+  <ellipse cx="512" cy="120" rx="75" ry="95" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="502,213 522,213 512,235" stroke="black" stroke-width="3" fill="white"/>
+  <!-- String 2 -->
+  <path d="M512,235 Q500,350 490,420 Q480,480 475,550" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Balloon 3 (right) -->
+  <ellipse cx="660" cy="160" rx="65" ry="85" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="650,243 670,243 660,265" stroke="black" stroke-width="3" fill="white"/>
+  <!-- String 3 -->
+  <path d="M660,265 Q640,350 560,430 Q520,480 490,550" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Cat body -->
+  <ellipse cx="480" cy="680" rx="100" ry="120" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Cat head -->
+  <circle cx="480" cy="530" r="80" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Cat ears -->
+  <polygon points="420,470 400,390 450,450" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="540,470 560,390 510,450" stroke="black" stroke-width="4" fill="white"/>
+  <!-- Inner ears -->
+  <polygon points="425,460 415,410 445,450" stroke="black" stroke-width="2" fill="white"/>
+  <polygon points="535,460 545,410 515,450" stroke="black" stroke-width="2" fill="white"/>
+
+  <!-- Eyes -->
+  <ellipse cx="450" cy="520" rx="18" ry="20" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="510" cy="520" rx="18" ry="20" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="453" cy="516" r="8" stroke="black" stroke-width="2" fill="black"/>
+  <circle cx="513" cy="516" r="8" stroke="black" stroke-width="2" fill="black"/>
+
+  <!-- Nose -->
+  <polygon points="480,548 472,560 488,560" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Mouth -->
+  <path d="M472,560 Q465,575 455,570" stroke="black" stroke-width="3" fill="none"/>
+  <path d="M488,560 Q495,575 505,570" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Whiskers -->
+  <line x1="390" y1="545" x2="445" y2="555" stroke="black" stroke-width="3"/>
+  <line x1="385" y1="565" x2="445" y2="565" stroke="black" stroke-width="3"/>
+  <line x1="390" y1="585" x2="445" y2="575" stroke="black" stroke-width="3"/>
+  <line x1="515" y1="555" x2="570" y2="545" stroke="black" stroke-width="3"/>
+  <line x1="515" y1="565" x2="575" y2="565" stroke="black" stroke-width="3"/>
+  <line x1="515" y1="575" x2="570" y2="585" stroke="black" stroke-width="3"/>
+
+  <!-- Arms (holding strings) -->
+  <path d="M400,620 Q370,580 380,550 Q385,540 400,545" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M560,620 Q590,580 580,550 Q575,540 560,545" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Paw left (holding strings) -->
+  <circle cx="395" cy="545" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <!-- Paw right -->
+  <circle cx="565" cy="545" r="15" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Legs -->
+  <ellipse cx="430" cy="790" rx="30" ry="20" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="530" cy="790" rx="30" ry="20" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tail -->
+  <path d="M580,700 Q650,680 660,630 Q665,600 640,590" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Clouds below -->
+  <ellipse cx="150" cy="900" rx="100" ry="40" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="250" cy="910" rx="80" ry="35" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="100" cy="920" r="50" stroke="black" stroke-width="4" fill="white"/>
+
+  <ellipse cx="700" cy="880" rx="120" ry="45" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="820" cy="890" rx="90" ry="40" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="630" cy="900" r="45" stroke="black" stroke-width="4" fill="white"/>
+
+  <ellipse cx="450" cy="940" rx="100" ry="35" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="380" cy="950" r="40" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="540" cy="950" r="40" stroke="black" stroke-width="4" fill="white"/>
+</svg>

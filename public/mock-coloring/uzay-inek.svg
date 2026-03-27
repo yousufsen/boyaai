@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="white"/>
+
+  <!-- Stars -->
+  <polygon points="150,80 158,105 185,105 163,120 171,145 150,130 129,145 137,120 115,105 142,105" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="850,120 858,145 885,145 863,160 871,185 850,170 829,185 837,160 815,145 842,145" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="200,300 206,318 225,318 210,328 216,346 200,336 184,346 190,328 175,318 194,318" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="780,400 786,418 805,418 790,428 796,446 780,436 764,446 770,428 755,418 774,418" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="120,600 126,618 145,618 130,628 136,646 120,636 104,646 110,628 95,618 114,618" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="900,650 906,668 925,668 910,678 916,696 900,686 884,696 890,678 875,668 894,668" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="500,100 506,118 525,118 510,128 516,146 500,136 484,146 490,128 475,118 494,118" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Planet with ring -->
+  <circle cx="820" cy="280" r="60" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="820" cy="280" rx="100" ry="20" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Small crescent moon -->
+  <path d="M100,450 A50,50 0 1,1 100,350 A35,35 0 1,0 100,450 Z" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Cow body -->
+  <ellipse cx="512" cy="520" rx="180" ry="130" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Cow head -->
+  <ellipse cx="512" cy="360" rx="100" ry="85" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Helmet (dome over head) -->
+  <path d="M390,370 A130,130 0 0,1 634,370" stroke="black" stroke-width="4" fill="none"/>
+  <ellipse cx="512" cy="340" rx="130" ry="110" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Helmet antenna -->
+  <line x1="512" y1="230" x2="512" y2="200" stroke="black" stroke-width="4"/>
+  <circle cx="512" cy="195" r="8" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Eyes -->
+  <circle cx="475" cy="345" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="549" cy="345" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="480" cy="342" r="6" stroke="black" stroke-width="3" fill="black"/>
+  <circle cx="554" cy="342" r="6" stroke="black" stroke-width="3" fill="black"/>
+
+  <!-- Nostrils -->
+  <ellipse cx="500" cy="395" rx="8" ry="6" stroke="black" stroke-width="3" fill="white"/>
+  <ellipse cx="524" cy="395" rx="8" ry="6" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Mouth -->
+  <path d="M490,410 Q512,430 534,410" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Horns -->
+  <path d="M430,290 L410,240 L440,275" stroke="black" stroke-width="4" fill="white"/>
+  <path d="M594,290 L614,240 L584,275" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Ears -->
+  <ellipse cx="410" cy="320" rx="25" ry="15" stroke="black" stroke-width="4" fill="white" transform="rotate(-30,410,320)"/>
+  <ellipse cx="614" cy="320" rx="25" ry="15" stroke="black" stroke-width="4" fill="white" transform="rotate(30,614,320)"/>
+
+  <!-- Cow spots on body -->
+  <ellipse cx="460" cy="490" rx="35" ry="25" stroke="black" stroke-width="3" fill="white"/>
+  <ellipse cx="570" cy="530" rx="30" ry="40" stroke="black" stroke-width="3" fill="white"/>
+  <ellipse cx="500" cy="580" rx="25" ry="20" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Legs (floating, slightly angled) -->
+  <rect x="400" y="630" width="35" height="80" rx="10" stroke="black" stroke-width="4" fill="white" transform="rotate(-15,417,670)"/>
+  <rect x="480" y="640" width="35" height="80" rx="10" stroke="black" stroke-width="4" fill="white" transform="rotate(-5,497,680)"/>
+  <rect x="540" y="640" width="35" height="80" rx="10" stroke="black" stroke-width="4" fill="white" transform="rotate(5,557,680)"/>
+  <rect x="600" y="630" width="35" height="80" rx="10" stroke="black" stroke-width="4" fill="white" transform="rotate(15,617,670)"/>
+
+  <!-- Hooves -->
+  <ellipse cx="395" cy="720" rx="20" ry="10" stroke="black" stroke-width="4" fill="white" transform="rotate(-15,395,720)"/>
+  <ellipse cx="493" cy="725" rx="20" ry="10" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="558" cy="725" rx="20" ry="10" stroke="black" stroke-width="4" fill="white"/>
+  <ellipse cx="638" cy="720" rx="20" ry="10" stroke="black" stroke-width="4" fill="white" transform="rotate(15,638,720)"/>
+
+  <!-- Tail -->
+  <path d="M692,500 Q750,480 740,440 Q730,420 750,410" stroke="black" stroke-width="4" fill="none"/>
+  <ellipse cx="755" cy="405" rx="15" ry="10" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Udder -->
+  <ellipse cx="512" cy="650" rx="35" ry="20" stroke="black" stroke-width="4" fill="white"/>
+</svg>

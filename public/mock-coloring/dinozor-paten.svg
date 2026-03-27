@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="white"/>
+
+  <!-- T-Rex Head -->
+  <ellipse cx="620" cy="230" rx="120" ry="90" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Jaw / snout -->
+  <path d="M680,280 Q740,290 750,320 Q740,350 680,340 Z" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Teeth -->
+  <path d="M695,280 L700,300 L710,280 L715,300 L725,280 L730,300 L740,285" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Eye -->
+  <circle cx="600" cy="210" r="22" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="605" cy="207" r="10" stroke="black" stroke-width="3" fill="black"/>
+  <circle cx="610" cy="202" r="4" fill="white"/>
+
+  <!-- Happy eyebrow -->
+  <path d="M575,185 Q600,170 625,185" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Nostril -->
+  <circle cx="720" cy="240" r="6" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Big smile -->
+  <path d="M660,310 Q680,340 700,320" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Neck -->
+  <path d="M540,290 Q500,350 480,420" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M640,310 Q600,370 560,420" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Body -->
+  <ellipse cx="470" cy="530" rx="160" ry="140" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Belly line -->
+  <path d="M380,450 Q350,530 380,620 Q410,680 470,700" stroke="black" stroke-width="3" fill="none"/>
+
+  <!-- Back spikes -->
+  <polygon points="520,395 535,350 550,395" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="490,400 505,360 520,400" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="460,410 475,370 490,410" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tail -->
+  <path d="M310,540 Q240,520 180,480 Q140,460 120,430" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M310,580 Q250,570 200,540 Q160,520 130,480" stroke="black" stroke-width="4" fill="none"/>
+  <!-- Tail tip -->
+  <path d="M120,430 Q110,450 130,480" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tail spikes -->
+  <polygon points="250,530 240,490 270,520" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="200,510 190,470 220,500" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tiny arms -->
+  <path d="M560,480 Q600,470 620,490 Q630,500 620,510" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="620" cy="510" r="10" stroke="black" stroke-width="4" fill="white"/>
+  <path d="M560,520 Q600,530 610,550 Q615,560 605,565" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="605" cy="565" r="10" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Left leg -->
+  <path d="M400,660 L380,740 L370,760" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M430,660 L410,740 L400,760" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M370,760 Q385,770 400,760" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Right leg -->
+  <path d="M510,660 L530,740 L540,760" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M540,660 L560,740 L570,760" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M540,760 Q555,770 570,760" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Left roller skate -->
+  <rect x="340" y="760" width="90" height="30" rx="8" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="360" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="390" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="420" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <!-- Axle -->
+  <line x1="355" y1="790" x2="425" y2="790" stroke="black" stroke-width="3"/>
+
+  <!-- Right roller skate -->
+  <rect x="510" y="760" width="90" height="30" rx="8" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="530" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="560" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="590" cy="805" r="15" stroke="black" stroke-width="4" fill="white"/>
+  <!-- Axle -->
+  <line x1="525" y1="790" x2="595" y2="790" stroke="black" stroke-width="3"/>
+
+  <!-- Motion lines -->
+  <line x1="280" y1="800" x2="200" y2="800" stroke="black" stroke-width="3"/>
+  <line x1="290" y1="820" x2="220" y2="820" stroke="black" stroke-width="3"/>
+  <line x1="300" y1="780" x2="240" y2="780" stroke="black" stroke-width="3"/>
+
+  <!-- Ground line -->
+  <line x1="50" y1="850" x2="974" y2="850" stroke="black" stroke-width="3"/>
+</svg>

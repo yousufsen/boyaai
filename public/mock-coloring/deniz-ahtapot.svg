@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="white"/>
+
+  <!-- Bubbles -->
+  <circle cx="180" cy="120" r="20" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="220" cy="180" r="12" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="150" cy="200" r="8" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="800" cy="150" r="18" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="840" cy="200" r="10" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="750" cy="100" r="14" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="400" cy="80" r="15" stroke="black" stroke-width="3" fill="white"/>
+  <circle cx="650" cy="100" r="10" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Top hat -->
+  <rect x="430" y="140" width="160" height="120" rx="5" stroke="black" stroke-width="4" fill="white"/>
+  <rect x="400" y="255" width="220" height="20" rx="5" stroke="black" stroke-width="4" fill="white"/>
+  <!-- Hat band -->
+  <rect x="430" y="220" width="160" height="20" stroke="black" stroke-width="3" fill="white"/>
+
+  <!-- Octopus head -->
+  <ellipse cx="512" cy="360" rx="130" ry="110" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Eyes -->
+  <circle cx="465" cy="340" r="25" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="559" cy="340" r="25" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="470" cy="336" r="10" stroke="black" stroke-width="3" fill="black"/>
+  <circle cx="564" cy="336" r="10" stroke="black" stroke-width="3" fill="black"/>
+  <!-- Eye shine -->
+  <circle cx="475" cy="330" r="4" fill="white"/>
+  <circle cx="569" cy="330" r="4" fill="white"/>
+
+  <!-- Smile -->
+  <path d="M470,390 Q512,430 554,390" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Cheeks -->
+  <circle cx="430" cy="385" r="15" stroke="black" stroke-width="2" fill="white"/>
+  <circle cx="594" cy="385" r="15" stroke="black" stroke-width="2" fill="white"/>
+
+  <!-- Tentacle 1 (far left) -->
+  <path d="M400,440 Q340,520 300,580 Q260,640 280,700 Q300,730 330,710" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="330" cy="710" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 2 -->
+  <path d="M420,460 Q370,540 350,620 Q330,700 360,760 Q380,790 400,770" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="400" cy="770" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 3 -->
+  <path d="M455,470 Q430,560 420,650 Q410,740 430,800 Q445,830 460,810" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="460" cy="810" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 4 (center left) -->
+  <path d="M490,475 Q480,570 475,660 Q470,750 485,830 Q495,860 510,840" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="510" cy="840" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 5 (center right) -->
+  <path d="M534,475 Q544,570 549,660 Q554,750 539,830 Q529,860 514,840" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="514" cy="840" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 6 -->
+  <path d="M569,470 Q594,560 604,650 Q614,740 594,800 Q579,830 564,810" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="564" cy="810" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 7 -->
+  <path d="M604,460 Q654,540 674,620 Q694,700 664,760 Q644,790 624,770" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="624" cy="770" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Tentacle 8 (far right) -->
+  <path d="M624,440 Q684,520 724,580 Q764,640 744,700 Q724,730 694,710" stroke="black" stroke-width="4" fill="none"/>
+  <circle cx="694" cy="710" r="12" stroke="black" stroke-width="4" fill="white"/>
+
+  <!-- Small fish left -->
+  <ellipse cx="160" cy="500" rx="40" ry="20" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="200,500 240,475 240,525" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="148" cy="495" r="5" stroke="black" stroke-width="3" fill="black"/>
+
+  <!-- Small fish right -->
+  <ellipse cx="860" cy="600" rx="35" ry="18" stroke="black" stroke-width="4" fill="white"/>
+  <polygon points="825,600 790,578 790,622" stroke="black" stroke-width="4" fill="white"/>
+  <circle cx="872" cy="596" r="5" stroke="black" stroke-width="3" fill="black"/>
+
+  <!-- Seaweed left -->
+  <path d="M80,1024 Q100,920 80,850 Q60,780 80,720 Q100,660 80,600" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M120,1024 Q140,940 120,880 Q100,820 120,760" stroke="black" stroke-width="4" fill="none"/>
+
+  <!-- Seaweed right -->
+  <path d="M920,1024 Q940,940 920,870 Q900,800 920,740 Q940,680 920,620" stroke="black" stroke-width="4" fill="none"/>
+  <path d="M960,1024 Q940,950 960,890 Q980,830 960,780" stroke="black" stroke-width="4" fill="none"/>
+</svg>
