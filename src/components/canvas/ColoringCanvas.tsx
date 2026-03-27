@@ -7,6 +7,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '@/constants/limits';
 
 interface ColoringCanvasProps {
   imageUrl: string;
+  initialDrawingDataUrl?: string | null;
 }
 
 export interface ColoringCanvasHandle {
@@ -14,7 +15,7 @@ export interface ColoringCanvasHandle {
   getDrawCanvas: () => HTMLCanvasElement | null;
 }
 
-export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasProps>(function ColoringCanvas({ imageUrl }, ref) {
+export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasProps>(function ColoringCanvas({ imageUrl, initialDrawingDataUrl }, ref) {
   const bgCanvasRef = useRef<HTMLCanvasElement>(null);
   const drawCanvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,17 +58,27 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     img.src = imageUrl;
   }, [imageUrl]);
 
-  // Initialize drawing canvas
+  // Initialize drawing canvas (and restore if resuming)
   useEffect(() => {
     const drawCanvas = drawCanvasRef.current;
     if (!drawCanvas) return;
     const ctx = drawCanvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    // Save initial empty state
-    snapshotsRef.current = [ctx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)];
-    redoStackRef.current = [];
-  }, [imageUrl]);
+
+    if (initialDrawingDataUrl) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+        snapshotsRef.current = [ctx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)];
+        redoStackRef.current = [];
+      };
+      img.src = initialDrawingDataUrl;
+    } else {
+      snapshotsRef.current = [ctx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)];
+      redoStackRef.current = [];
+    }
+  }, [imageUrl, initialDrawingDataUrl]);
 
   // Get canvas-relative coordinates from mouse/touch event
   const getCanvasPoint = useCallback((e: React.MouseEvent | React.TouchEvent) => {

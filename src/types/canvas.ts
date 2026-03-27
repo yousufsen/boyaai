@@ -27,12 +27,16 @@ export interface CanvasState {
   imageUrl: string | null;
 }
 
+export type ArtworkStatus = 'completed' | 'in-progress';
+
 export interface Artwork {
   id: string;
   prompt: string;
   originalImageUrl: string;
   coloredDataUrl: string;
+  drawingDataUrl?: string; // drawing layer only, for resuming
   createdAt: string;
+  status: ArtworkStatus;
 }
 
 export interface GenerateResponse {

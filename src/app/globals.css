@@ -57,3 +57,15 @@ body {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* Mobile bottom nav safe area */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Add bottom padding on mobile for bottom nav */
+@media (max-width: 767px) {
+  main {
+    padding-bottom: 4.5rem;
+  }
+}

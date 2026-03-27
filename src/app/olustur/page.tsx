@@ -8,6 +8,7 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { DAILY_GENERATION_LIMIT, LOADING_MESSAGES } from '@/constants/limits';
 import type { GenerateResponse } from '@/types/canvas';
 import Image from 'next/image';
+import { SpeechModal } from '@/components/ui/SpeechModal';
 
 export default function OlusturPageWrapper() {
   return (
@@ -30,8 +31,9 @@ function OlusturPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, dailyCount, incrementDailyCount, reset } = usePromptStore();
-  const { isListening, transcript, isSupported, startListening, stopListening } = useSpeechRecognition();
+  const { isListening, transcript, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition();
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
+  const [showSpeechModal, setShowSpeechModal] = useState(false);
 
   // Set prompt from URL query
   useEffect(() => {
@@ -40,13 +42,6 @@ function OlusturPage() {
       setPrompt(urlPrompt);
     }
   }, [searchParams, setPrompt]);
-
-  // Sync speech transcript to prompt
-  useEffect(() => {
-    if (transcript) {
-      setPrompt(transcript);
-    }
-  }, [transcript, setPrompt]);
 
   // Cycle loading messages
   useEffect(() => {
@@ -83,14 +78,9 @@ function OlusturPage() {
     }
   }, [prompt, dailyCount, setStatus, setImageUrl, incrementDailyCount, setError]);
 
-  const handleMicToggle = () => {
-    if (isListening) {
-      stopListening();
-      setStatus('idle');
-    } else {
-      startListening();
-      setStatus('recording');
-    }
+  const handleOpenSpeechModal = () => {
+    resetTranscript();
+    setShowSpeechModal(true);
   };
 
   const remaining = DAILY_GENERATION_LIMIT - dailyCount;
@@ -152,20 +142,14 @@ function OlusturPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
-          {/* Microphone button */}
-          {isSupported && (
-            <button
-              onClick={handleMicToggle}
-              disabled={status === 'generating'}
-              className={`min-h-[56px] px-6 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${
-                isListening
-                  ? 'bg-red-500 text-white shadow-lg shadow-red-200 animate-pulse'
-                  : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-              }`}
-            >
-              {isListening ? '⏹️ Dinleniyor...' : '🎤 Sesle Anlat'}
-            </button>
-          )}
+          {/* Microphone button — opens speech modal */}
+          <button
+            onClick={handleOpenSpeechModal}
+            disabled={status === 'generating'}
+            className="min-h-[56px] px-6 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 bg-purple-100 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
+          >
+            🎤 Sesle Anlat
+          </button>
 
           {/* Generate button */}
           <button
@@ -284,6 +268,21 @@ function OlusturPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Speech Modal */}
+      <SpeechModal
+        isOpen={showSpeechModal}
+        isListening={isListening}
+        transcript={transcript}
+        isSupported={isSupported}
+        onStart={startListening}
+        onStop={stopListening}
+        onConfirm={(text) => setPrompt(text)}
+        onClose={() => {
+          if (isListening) stopListening();
+          setShowSpeechModal(false);
+        }}
+      />
 
       {/* Suggestion Cards */}
       {status === 'idle' && (

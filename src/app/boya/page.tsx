@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback, useRef } from 'react';
+import { Suspense, useCallback, useRef, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -10,7 +10,10 @@ import { Toolbar } from '@/components/canvas/Toolbar';
 import { ColorPalette } from '@/components/canvas/ColorPalette';
 import { BrushSettings } from '@/components/canvas/BrushSettings';
 import { UndoRedoControls } from '@/components/canvas/UndoRedoControls';
+import { SaveSuccessAnimation } from '@/components/ui/SaveSuccessAnimation';
 import { useCanvasStore } from '@/store/canvasStore';
+import { usePromptStore } from '@/store/promptStore';
+import { saveArtwork, updateArtwork, getArtwork } from '@/lib/storage';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '@/constants/limits';
 
 export default function BoyaPageWrapper() {
@@ -24,29 +27,82 @@ export default function BoyaPageWrapper() {
 function BoyaPage() {
   const searchParams = useSearchParams();
   const imageUrl = searchParams.get('image');
+  const artworkId = searchParams.get('artworkId');
   const canvasRef = useRef<ColoringCanvasHandle>(null);
   const clearCanvas = useCanvasStore((s) => s.clearCanvas);
+  const prompt = usePromptStore((s) => s.prompt);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  const [currentArtworkId, setCurrentArtworkId] = useState<string | null>(artworkId);
+  const [initialDrawingData, setInitialDrawingData] = useState<string | null>(null);
 
-  const handleSave = useCallback(() => {
+  // Load existing artwork drawing data if resuming
+  useEffect(() => {
+    if (artworkId) {
+      const existing = getArtwork(artworkId);
+      if (existing?.drawingDataUrl) {
+        setInitialDrawingData(existing.drawingDataUrl);
+      }
+    }
+  }, [artworkId]);
+
+  const getMergedDataUrl = useCallback((): string | null => {
     const bgCanvas = canvasRef.current?.getBgCanvas();
     const drawCanvas = canvasRef.current?.getDrawCanvas();
-    if (!bgCanvas || !drawCanvas) return;
+    if (!bgCanvas || !drawCanvas) return null;
 
-    // Merge both canvases
     const mergedCanvas = document.createElement('canvas');
     mergedCanvas.width = CANVAS_WIDTH;
     mergedCanvas.height = CANVAS_HEIGHT;
     const ctx = mergedCanvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) return null;
 
     ctx.drawImage(bgCanvas, 0, 0);
     ctx.drawImage(drawCanvas, 0, 0);
+    return mergedCanvas.toDataURL('image/png');
+  }, []);
 
+  const getDrawingDataUrl = useCallback((): string | null => {
+    const drawCanvas = canvasRef.current?.getDrawCanvas();
+    if (!drawCanvas) return null;
+    return drawCanvas.toDataURL('image/png');
+  }, []);
+
+  const handleDownload = useCallback(() => {
+    const dataUrl = getMergedDataUrl();
+    if (!dataUrl) return;
     const link = document.createElement('a');
     link.download = 'boyaai-resim.png';
-    link.href = mergedCanvas.toDataURL('image/png');
+    link.href = dataUrl;
     link.click();
-  }, []);
+  }, [getMergedDataUrl]);
+
+  const handleSaveToGallery = useCallback((status: 'completed' | 'in-progress' = 'completed') => {
+    const coloredDataUrl = getMergedDataUrl();
+    const drawingDataUrl = getDrawingDataUrl();
+    if (!coloredDataUrl || !imageUrl) return;
+
+    const artworkPrompt = prompt || 'Boyama';
+
+    if (currentArtworkId) {
+      updateArtwork(currentArtworkId, {
+        coloredDataUrl,
+        drawingDataUrl: drawingDataUrl || undefined,
+        status,
+        prompt: artworkPrompt,
+      });
+    } else {
+      const saved = saveArtwork({
+        prompt: artworkPrompt,
+        originalImageUrl: imageUrl,
+        coloredDataUrl,
+        drawingDataUrl: drawingDataUrl || undefined,
+        status,
+      });
+      setCurrentArtworkId(saved.id);
+    }
+
+    setShowSaveSuccess(true);
+  }, [getMergedDataUrl, getDrawingDataUrl, imageUrl, prompt, currentArtworkId]);
 
   const handleClear = useCallback(() => {
     clearCanvas();
@@ -73,6 +129,9 @@ function BoyaPage() {
 
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col md:flex-row overflow-hidden">
+      {/* Save success animation */}
+      <SaveSuccessAnimation show={showSaveSuccess} onComplete={() => setShowSaveSuccess(false)} />
+
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col gap-4 p-3 w-[88px] bg-white/60 backdrop-blur-xl border-r border-purple-100 overflow-y-auto">
         <Toolbar />
@@ -81,7 +140,27 @@ function BoyaPage() {
         <div className="w-full h-px bg-purple-200" />
         <ColorPalette />
         <div className="w-full h-px bg-purple-200" />
-        <UndoRedoControls onSave={handleSave} onClear={handleClear} />
+        <UndoRedoControls onSave={handleDownload} onClear={handleClear} />
+        <div className="w-full h-px bg-purple-200" />
+        {/* Gallery save buttons */}
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => handleSaveToGallery('completed')}
+            title="Galeriye Kaydet"
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-xs shadow-md hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center gap-0.5"
+          >
+            <span className="text-lg">💾</span>
+            <span>Kaydet</span>
+          </button>
+          <button
+            onClick={() => handleSaveToGallery('in-progress')}
+            title="Yarım Kaydet"
+            className="w-full py-2.5 rounded-xl bg-amber-100 text-amber-700 font-bold text-xs hover:bg-amber-200 transition-all flex flex-col items-center gap-0.5"
+          >
+            <span className="text-lg">⏸️</span>
+            <span>Ara Ver</span>
+          </button>
+        </div>
       </aside>
 
       {/* Canvas area */}
@@ -92,7 +171,11 @@ function BoyaPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
         >
-          <ColoringCanvas ref={canvasRef} imageUrl={imageUrl} />
+          <ColoringCanvas
+            ref={canvasRef}
+            imageUrl={imageUrl}
+            initialDrawingDataUrl={initialDrawingData}
+          />
         </motion.div>
       </div>
 
@@ -101,11 +184,24 @@ function BoyaPage() {
         {/* Colors row */}
         <ColorPalette />
         {/* Tools row */}
-        <div className="flex items-center justify-between gap-2 overflow-x-auto">
+        <div className="flex items-center gap-2 overflow-x-auto">
           <Toolbar />
           <BrushSettings />
           <div className="w-px h-8 bg-purple-200 flex-shrink-0" />
-          <UndoRedoControls onSave={handleSave} onClear={handleClear} />
+          <UndoRedoControls onSave={handleDownload} onClear={handleClear} />
+          <div className="w-px h-8 bg-purple-200 flex-shrink-0" />
+          <button
+            onClick={() => handleSaveToGallery('completed')}
+            className="flex-shrink-0 w-12 h-12 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl shadow-md"
+          >
+            💾
+          </button>
+          <button
+            onClick={() => handleSaveToGallery('in-progress')}
+            className="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl"
+          >
+            ⏸️
+          </button>
         </div>
       </aside>
     </div>

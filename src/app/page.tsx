@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { RecentArtworks } from '@/components/ui/RecentArtworks';
 
 const FLOATING_EMOJIS = ['🎨', '🖌️', '🌈', '⭐', '🦄', '🎉', '🦋', '🌸'];
 
@@ -153,6 +154,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Recent Artworks */}
+      <RecentArtworks />
 
       {/* Footer */}
       <footer className="py-8 text-center text-purple-400 font-semibold border-t border-purple-100/50">
