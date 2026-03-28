@@ -11,10 +11,13 @@ import { ColorPalette } from '@/components/canvas/ColorPalette';
 import { BrushSettings } from '@/components/canvas/BrushSettings';
 import { UndoRedoControls } from '@/components/canvas/UndoRedoControls';
 import { SaveSuccessAnimation } from '@/components/ui/SaveSuccessAnimation';
+import { CompletionCelebration } from '@/components/ui/CompletionCelebration';
 import { useCanvasStore } from '@/store/canvasStore';
 import { usePromptStore } from '@/store/promptStore';
+import { useProfileStore } from '@/store/profileStore';
 import { saveArtwork, updateArtwork, getArtwork } from '@/lib/storage';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '@/constants/limits';
+import { playTadaSound } from '@/lib/sounds';
 
 export default function BoyaPageWrapper() {
   return (
@@ -31,7 +34,9 @@ function BoyaPage() {
   const canvasRef = useRef<ColoringCanvasHandle>(null);
   const clearCanvas = useCanvasStore((s) => s.clearCanvas);
   const prompt = usePromptStore((s) => s.prompt);
+  const profile = useProfileStore((s) => s.profile);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [currentArtworkId, setCurrentArtworkId] = useState<string | null>(artworkId);
   const [initialDrawingData, setInitialDrawingData] = useState<string | null>(null);
 
@@ -76,7 +81,7 @@ function BoyaPage() {
     link.click();
   }, [getMergedDataUrl]);
 
-  const handleSaveToGallery = useCallback((status: 'completed' | 'in-progress' = 'completed') => {
+  const handleSaveToGallery = useCallback((status: 'completed' | 'in-progress' = 'completed', stars?: number) => {
     const coloredDataUrl = getMergedDataUrl();
     const drawingDataUrl = getDrawingDataUrl();
     if (!coloredDataUrl || !imageUrl) return;
@@ -89,6 +94,7 @@ function BoyaPage() {
         drawingDataUrl: drawingDataUrl || undefined,
         status,
         prompt: artworkPrompt,
+        ...(stars !== undefined && { stars }),
       });
     } else {
       const saved = saveArtwork({
@@ -97,12 +103,21 @@ function BoyaPage() {
         coloredDataUrl,
         drawingDataUrl: drawingDataUrl || undefined,
         status,
+        ...(stars !== undefined && { stars }),
+        profileId: profile?.id,
       });
       setCurrentArtworkId(saved.id);
     }
 
+    if (status === 'completed') {
+      playTadaSound();
+    }
     setShowSaveSuccess(true);
-  }, [getMergedDataUrl, getDrawingDataUrl, imageUrl, prompt, currentArtworkId]);
+  }, [getMergedDataUrl, getDrawingDataUrl, imageUrl, prompt, currentArtworkId, profile]);
+
+  const handleCompletePainting = useCallback(() => {
+    setShowCelebration(true);
+  }, []);
 
   const handleClear = useCallback(() => {
     clearCanvas();
@@ -129,8 +144,28 @@ function BoyaPage() {
 
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col md:flex-row overflow-hidden">
+      {/* Prompt text at top */}
+      {prompt && (
+        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-purple-100 shadow-sm max-w-md">
+          <p className="text-xs font-bold text-purple-500 truncate text-center">&ldquo;{prompt}&rdquo;</p>
+        </div>
+      )}
+
       {/* Save success animation */}
       <SaveSuccessAnimation show={showSaveSuccess} onComplete={() => setShowSaveSuccess(false)} />
+
+      {/* Completion celebration */}
+      <CompletionCelebration
+        show={showCelebration}
+        onComplete={(stars) => {
+          handleSaveToGallery('completed', stars);
+          setShowCelebration(false);
+        }}
+        onDismiss={() => {
+          handleSaveToGallery('completed');
+          setShowCelebration(false);
+        }}
+      />
 
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col gap-4 p-3 w-[88px] bg-white/60 backdrop-blur-xl border-r border-purple-100 overflow-y-auto">
@@ -145,12 +180,12 @@ function BoyaPage() {
         {/* Gallery save buttons */}
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => handleSaveToGallery('completed')}
-            title="Galeriye Kaydet"
+            onClick={handleCompletePainting}
+            title="Boyamayı Tamamla"
             className="w-full py-2.5 rounded-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-xs shadow-md hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center gap-0.5"
           >
-            <span className="text-lg">💾</span>
-            <span>Kaydet</span>
+            <span className="text-lg">🎉</span>
+            <span>Bitti!</span>
           </button>
           <button
             onClick={() => handleSaveToGallery('in-progress')}
@@ -191,10 +226,10 @@ function BoyaPage() {
           <UndoRedoControls onSave={handleDownload} onClear={handleClear} />
           <div className="w-px h-8 bg-purple-200 flex-shrink-0" />
           <button
-            onClick={() => handleSaveToGallery('completed')}
+            onClick={handleCompletePainting}
             className="flex-shrink-0 w-12 h-12 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl shadow-md"
           >
-            💾
+            🎉
           </button>
           <button
             onClick={() => handleSaveToGallery('in-progress')}

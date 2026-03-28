@@ -1,8 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { RecentArtworks } from '@/components/ui/RecentArtworks';
+import { useProfileStore } from '@/store/profileStore';
+import { getRandomInspiration } from '@/constants/inspirations';
 
 const FLOATING_EMOJIS = ['🎨', '🖌️', '🌈', '⭐', '🦄', '🎉', '🦋', '🌸'];
 
@@ -22,6 +25,13 @@ const STEPS = [
 ];
 
 export default function Home() {
+  const profile = useProfileStore((s) => s.profile);
+  const [inspiration, setInspiration] = useState('');
+
+  useEffect(() => {
+    setInspiration(getRandomInspiration());
+  }, []);
+
   return (
     <div className="relative overflow-hidden">
       {/* Floating emojis */}
@@ -29,47 +39,68 @@ export default function Home() {
         <motion.div
           key={i}
           className="absolute text-4xl pointer-events-none select-none"
-          initial={{
-            x: `${10 + (i * 12)}vw`,
-            y: '100vh',
-            opacity: 0,
-          }}
-          animate={{
-            y: '-10vh',
-            opacity: [0, 0.7, 0.7, 0],
-            rotate: [0, 15, -15, 0],
-          }}
-          transition={{
-            duration: 8 + i * 1.5,
-            repeat: Infinity,
-            delay: i * 2,
-            ease: 'linear',
-          }}
+          initial={{ x: `${10 + (i * 12)}vw`, y: '100vh', opacity: 0 }}
+          animate={{ y: '-10vh', opacity: [0, 0.7, 0.7, 0], rotate: [0, 15, -15, 0] }}
+          transition={{ duration: 8 + i * 1.5, repeat: Infinity, delay: i * 2, ease: 'linear' }}
         >
           {emoji}
         </motion.div>
       ))}
 
       {/* Hero Section */}
-      <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-4 py-20">
+      <section className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent">
-              Hayal Et,
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
-              Boya!
-            </span>
+          {/* Personalized greeting */}
+          {profile && (
+            <motion.p
+              className="text-lg md:text-xl text-purple-500 font-bold mb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Merhaba {profile.name}! {profile.avatar}
+            </motion.p>
+          )}
+
+          <h1 className="text-5xl md:text-7xl font-black mb-4 leading-tight">
+            {profile ? (
+              <>
+                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent">
+                  Bugün ne hayal
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
+                  edeceksin?
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent">
+                  Hayal Et,
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
+                  Boya!
+                </span>
+              </>
+            )}
           </h1>
 
-          <p className="text-xl md:text-2xl text-purple-700/70 max-w-xl mx-auto mb-10 font-semibold">
-            Hayalindeki sahneyi anlat, yapay zeka senin için boyama sayfası çizsin! 🎨
-          </p>
+          {/* Random inspiration */}
+          {inspiration && (
+            <motion.p
+              className="text-lg md:text-xl text-purple-600/60 max-w-lg mx-auto mb-8 font-semibold italic"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              &ldquo;{inspiration}&rdquo;
+            </motion.p>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

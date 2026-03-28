@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { getArtworks, deleteArtwork } from '@/lib/storage';
+import { getArtworksForProfile, deleteArtwork, getActiveProfileId, getArtworks } from '@/lib/storage';
 import type { Artwork } from '@/types/canvas';
 
 export default function GaleriPage() {
@@ -12,7 +12,12 @@ export default function GaleriPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   useEffect(() => {
-    setArtworks(getArtworks());
+    const profileId = getActiveProfileId();
+    if (profileId) {
+      setArtworks(getArtworksForProfile(profileId));
+    } else {
+      setArtworks(getArtworks());
+    }
   }, []);
 
   const handleDelete = (id: string) => {
@@ -111,7 +116,12 @@ export default function GaleriPage() {
 
               {/* Info */}
               <div className="p-3">
-                <p className="text-sm font-bold text-purple-800 truncate">{artwork.prompt}</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-sm font-bold text-purple-800 truncate flex-1">{artwork.prompt}</p>
+                  {artwork.stars && (
+                    <span className="text-xs flex-shrink-0">{'⭐'.repeat(artwork.stars)}</span>
+                  )}
+                </div>
                 <p className="text-xs text-purple-400 mt-1">{formatDate(artwork.createdAt)}</p>
               </div>
             </button>

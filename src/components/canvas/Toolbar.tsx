@@ -3,6 +3,7 @@
 import { useCanvasStore } from '@/store/canvasStore';
 import { TOOLS } from '@/constants/colors';
 import type { ToolType } from '@/constants/colors';
+import { playClickSound } from '@/lib/sounds';
 
 export function Toolbar() {
   const { activeTool, setTool } = useCanvasStore();
@@ -13,7 +14,7 @@ export function Toolbar() {
       {TOOLS.map((tool) => (
         <button
           key={tool.type}
-          onClick={() => setTool(tool.type as ToolType)}
+          onClick={() => { setTool(tool.type as ToolType); playClickSound(); }}
           title={tool.name}
           className={`relative w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all ${
             activeTool === tool.type

@@ -2,6 +2,7 @@
 
 import { useCanvasStore } from '@/store/canvasStore';
 import { COLORS } from '@/constants/colors';
+import { playPopSound } from '@/lib/sounds';
 
 export function ColorPalette() {
   const { activeColor, setColor, activeTool } = useCanvasStore();
@@ -13,7 +14,7 @@ export function ColorPalette() {
         {COLORS.map((color) => (
           <button
             key={color.hex}
-            onClick={() => setColor(color.hex)}
+            onClick={() => { setColor(color.hex); playPopSound(); }}
             title={color.name}
             disabled={activeTool === 'eraser'}
             className={`flex-shrink-0 w-9 h-9 md:w-8 md:h-8 rounded-full border-2 transition-all hover:scale-110 ${

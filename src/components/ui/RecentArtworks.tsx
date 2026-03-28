@@ -3,14 +3,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { getArtworks } from '@/lib/storage';
+import { getArtworksForProfile, getActiveProfileId, getArtworks } from '@/lib/storage';
 import type { Artwork } from '@/types/canvas';
 
 export function RecentArtworks() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
 
   useEffect(() => {
-    const all = getArtworks();
+    const profileId = getActiveProfileId();
+    const all = profileId ? getArtworksForProfile(profileId) : getArtworks();
     setArtworks(all.slice(0, 3));
   }, []);
 

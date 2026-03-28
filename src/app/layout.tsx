@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
+import { ProfileGate } from "@/components/layout/ProfileGate";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -29,8 +30,10 @@ export default function RootLayout({
           <div className="absolute -bottom-40 left-1/2 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
         </div>
 
-        <Navbar />
-        <main className="flex-1">{children}</main>
+        <ProfileGate>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </ProfileGate>
       </body>
     </html>
   );

@@ -4,8 +4,10 @@ import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePromptStore } from '@/store/promptStore';
+import { useProfileStore } from '@/store/profileStore';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
-import { DAILY_GENERATION_LIMIT, LOADING_MESSAGES } from '@/constants/limits';
+import { LOADING_MESSAGES } from '@/constants/limits';
+import { getDailyLimit, getDailyUsageCount, incrementDailyUsage } from '@/lib/storage';
 import type { GenerateResponse } from '@/types/canvas';
 import Image from 'next/image';
 import { SpeechModal } from '@/components/ui/SpeechModal';
@@ -30,10 +32,21 @@ const SUGGESTIONS = [
 function OlusturPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, dailyCount, incrementDailyCount, reset } = usePromptStore();
+  const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, reset } = usePromptStore();
+  const profile = useProfileStore((s) => s.profile);
   const { isListening, transcript, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition();
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
   const [showSpeechModal, setShowSpeechModal] = useState(false);
+  const [dailyLimit, setDailyLimit] = useState(3);
+  const [dailyUsed, setDailyUsed] = useState(0);
+
+  // Load daily limit and usage from localStorage
+  useEffect(() => {
+    setDailyLimit(getDailyLimit());
+    if (profile) {
+      setDailyUsed(getDailyUsageCount(profile.id));
+    }
+  }, [profile]);
 
   // Set prompt from URL query
   useEffect(() => {
@@ -52,8 +65,10 @@ function OlusturPage() {
     return () => clearInterval(interval);
   }, [status]);
 
+  const remaining = dailyLimit - dailyUsed;
+
   const handleGenerate = useCallback(async () => {
-    if (!prompt.trim() || dailyCount >= DAILY_GENERATION_LIMIT) return;
+    if (!prompt.trim() || !profile || dailyUsed >= dailyLimit) return;
 
     setStatus('generating');
     setLoadingMsgIndex(0);
@@ -69,21 +84,20 @@ function OlusturPage() {
 
       if (data.success && data.imageUrl) {
         setImageUrl(data.imageUrl);
-        incrementDailyCount();
+        const newCount = incrementDailyUsage(profile.id);
+        setDailyUsed(newCount);
       } else {
         setError(data.error || 'Bir hata oluştu.');
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');
     }
-  }, [prompt, dailyCount, setStatus, setImageUrl, incrementDailyCount, setError]);
+  }, [prompt, profile, dailyUsed, dailyLimit, setStatus, setImageUrl, setError]);
 
   const handleOpenSpeechModal = () => {
     resetTranscript();
     setShowSpeechModal(true);
   };
-
-  const remaining = DAILY_GENERATION_LIMIT - dailyCount;
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
@@ -108,7 +122,7 @@ function OlusturPage() {
             Bugün kalan hak:
           </span>
           <div className="flex gap-1">
-            {Array.from({ length: DAILY_GENERATION_LIMIT }).map((_, i) => (
+            {Array.from({ length: dailyLimit }).map((_, i) => (
               <div
                 key={i}
                 className={`w-3 h-3 rounded-full transition-all ${

@@ -37,6 +37,21 @@ export interface Artwork {
   drawingDataUrl?: string; // drawing layer only, for resuming
   createdAt: string;
   status: ArtworkStatus;
+  stars?: number;
+  profileId?: string;
+}
+
+export interface ChildProfile {
+  id: string;
+  name: string;
+  age: number;
+  avatar: string; // emoji
+  createdAt: string;
+}
+
+export interface ParentSettings {
+  pin: string;
+  dailyLimit: number;
 }
 
 export interface GenerateResponse {
