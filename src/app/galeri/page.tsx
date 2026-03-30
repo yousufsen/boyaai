@@ -89,7 +89,7 @@ export default function GaleriPage() {
             <button
               onClick={() => {
                 if (artwork.status === 'in-progress') {
-                  window.location.href = `/boya?image=${encodeURIComponent(artwork.originalImageUrl)}&artworkId=${artwork.id}`;
+                  window.location.href = `/boya?artworkId=${artwork.id}`;
                 } else {
                   setSelectedArtwork(artwork);
                 }

@@ -9,7 +9,6 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { LOADING_MESSAGES } from '@/constants/limits';
 import { getDailyLimit, getDailyUsageCount, incrementDailyUsage } from '@/lib/storage';
 import type { GenerateResponse } from '@/types/canvas';
-import Image from 'next/image';
 import { SpeechModal } from '@/components/ui/SpeechModal';
 
 export default function OlusturPageWrapper() {
@@ -56,12 +55,12 @@ function OlusturPage() {
     }
   }, [searchParams, setPrompt]);
 
-  // Cycle loading messages
+  // Cycle loading messages every 3 seconds
   useEffect(() => {
     if (status !== 'generating') return;
     const interval = setInterval(() => {
       setLoadingMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
-    }, 1500);
+    }, 3000);
     return () => clearInterval(interval);
   }, [status]);
 
@@ -74,23 +73,33 @@ function OlusturPage() {
     setLoadingMsgIndex(0);
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 90000);
+
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt.trim() }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
 
-      const data: GenerateResponse = await res.json();
+      const data = await res.json();
 
       if (data.success && data.imageUrl) {
+        localStorage.setItem('boyaai-current-image', data.imageUrl);
         setImageUrl(data.imageUrl);
         const newCount = incrementDailyUsage(profile.id);
         setDailyUsed(newCount);
       } else {
         setError(data.error || 'Bir hata oluştu.');
       }
-    } catch {
-      setError('Bağlantı hatası. Lütfen tekrar deneyin.');
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        setError('Biraz yoğunuz, tekrar dene! 🔄');
+      } else {
+        setError('Bağlantı hatası. Lütfen tekrar deneyin.');
+      }
     }
   }, [prompt, profile, dailyUsed, dailyLimit, setStatus, setImageUrl, setError]);
 
@@ -182,33 +191,51 @@ function OlusturPage() {
         )}
       </motion.div>
 
-      {/* Loading Animation */}
+      {/* Loading Animation — Balloon pop mini game */}
       <AnimatePresence>
         {status === 'generating' && (
           <motion.div
-            className="bg-white/80 backdrop-blur-sm rounded-3xl p-10 shadow-xl border border-purple-100 mb-8 text-center"
+            className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-purple-100 mb-8 text-center overflow-hidden"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
+            {/* Floating balloons to pop */}
+            <p className="text-sm font-bold text-purple-400 mb-3">Beklerken balonları patlar! 🎈</p>
+            <div className="relative h-48 mb-4">
+              {['🎈', '🟡', '🔴', '🟢', '🔵', '🟣', '🟠'].map((balloon, i) => (
+                <motion.button
+                  key={`${i}-${loadingMsgIndex}`}
+                  className="absolute text-4xl cursor-pointer select-none hover:scale-125 transition-transform"
+                  style={{ left: `${10 + (i * 12)}%` }}
+                  initial={{ y: 200, opacity: 0 }}
+                  animate={{
+                    y: -20,
+                    opacity: 1,
+                    x: [0, (i % 2 === 0 ? 15 : -15), 0],
+                  }}
+                  transition={{
+                    y: { duration: 4 + i * 0.5, ease: 'easeOut', delay: i * 0.3 },
+                    x: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+                    opacity: { duration: 0.5, delay: i * 0.3 },
+                  }}
+                  whileTap={{ scale: [1, 2, 0], opacity: [1, 1, 0], transition: { duration: 0.3 } }}
+                >
+                  {balloon}
+                </motion.button>
+              ))}
+            </div>
+
+            {/* Spinning emoji */}
             <motion.div
-              className="text-6xl mb-4"
+              className="text-5xl mb-3"
               animate={{ rotate: [0, 360] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
             >
               🎨
             </motion.div>
 
-            {/* Progress bar */}
-            <div className="w-full max-w-xs mx-auto h-3 bg-purple-100 rounded-full overflow-hidden mb-4">
-              <motion.div
-                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                initial={{ width: '0%' }}
-                animate={{ width: '90%' }}
-                transition={{ duration: 2, ease: 'easeInOut' }}
-              />
-            </div>
-
+            {/* Changing messages */}
             <AnimatePresence mode="wait">
               <motion.p
                 key={loadingMsgIndex}
@@ -237,17 +264,18 @@ function OlusturPage() {
             </h2>
 
             <div className="relative w-full max-w-md mx-auto aspect-square rounded-2xl overflow-hidden border-4 border-purple-200 shadow-lg mb-6 bg-white">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={imageUrl}
                 alt="Boyama sayfası"
-                fill
-                className="object-contain p-2"
+                crossOrigin="anonymous"
+                className="w-full h-full object-contain p-2"
               />
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => router.push(`/boya?image=${encodeURIComponent(imageUrl)}`)}
+                onClick={() => router.push('/boya?source=generated')}
                 className="min-h-[56px] px-8 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-lg shadow-lg shadow-green-200 hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
                 🖌️ Boyamaya Başla!

@@ -29,7 +29,8 @@ export default function BoyaPageWrapper() {
 
 function BoyaPage() {
   const searchParams = useSearchParams();
-  const imageUrl = searchParams.get('image');
+  const source = searchParams.get('source');
+  const legacyImageUrl = searchParams.get('image');
   const artworkId = searchParams.get('artworkId');
   const canvasRef = useRef<ColoringCanvasHandle>(null);
   const clearCanvas = useCanvasStore((s) => s.clearCanvas);
@@ -39,16 +40,32 @@ function BoyaPage() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [currentArtworkId, setCurrentArtworkId] = useState<string | null>(artworkId);
   const [initialDrawingData, setInitialDrawingData] = useState<string | null>(null);
+  const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
 
-  // Load existing artwork drawing data if resuming
+  // Resolve image URL from various sources
   useEffect(() => {
     if (artworkId) {
+      // Resuming an existing artwork
       const existing = getArtwork(artworkId);
-      if (existing?.drawingDataUrl) {
-        setInitialDrawingData(existing.drawingDataUrl);
+      if (existing) {
+        setResolvedImageUrl(existing.originalImageUrl);
+        if (existing.drawingDataUrl) {
+          setInitialDrawingData(existing.drawingDataUrl);
+        }
       }
+    } else if (source === 'generated') {
+      // New image from /olustur — read base64 from localStorage
+      const stored = localStorage.getItem('boyaai-current-image');
+      if (stored) {
+        setResolvedImageUrl(stored);
+      }
+    } else if (legacyImageUrl) {
+      // Legacy URL param (backward compat with mock SVGs or direct links)
+      setResolvedImageUrl(legacyImageUrl);
     }
-  }, [artworkId]);
+  }, [artworkId, source, legacyImageUrl]);
+
+  const imageUrl = resolvedImageUrl;
 
   const getMergedDataUrl = useCallback((): string | null => {
     const bgCanvas = canvasRef.current?.getBgCanvas();

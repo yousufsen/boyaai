@@ -29,8 +29,41 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
   const snapshotsRef = useRef<ImageData[]>([]);
   const redoStackRef = useRef<ImageData[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const { activeTool, activeColor, brushSize, addAction, actions, undoneActions } = useCanvasStore();
+
+  // Cache background pixel data for fast outline detection
+  const bgPixelDataRef = useRef<Uint8ClampedArray | null>(null);
+
+  const cacheBgPixels = useCallback(() => {
+    const bgCtx = bgCanvasRef.current?.getContext('2d');
+    if (!bgCtx) return;
+    const imgData = bgCtx.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    bgPixelDataRef.current = imgData.data;
+  }, []);
+
+  // Check if any pixel within a radius around (x,y) on the background is dark/outline
+  const isNearOutline = useCallback((x: number, y: number, radius: number): boolean => {
+    const data = bgPixelDataRef.current;
+    if (!data) return false;
+    const cx = Math.floor(x);
+    const cy = Math.floor(y);
+    const r = Math.max(1, Math.floor(radius));
+
+    for (let dy = -r; dy <= r; dy++) {
+      for (let dx = -r; dx <= r; dx++) {
+        const px = cx + dx;
+        const py = cy + dy;
+        if (px < 0 || px >= CANVAS_WIDTH || py < 0 || py >= CANVAS_HEIGHT) continue;
+        const idx = (py * CANVAS_WIDTH + px) * 4;
+        if ((data[idx] + data[idx + 1] + data[idx + 2]) < 380) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }, []);
 
   // Load background image
   useEffect(() => {
@@ -39,6 +72,7 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     const ctx = bgCanvas.getContext('2d');
     if (!ctx) return;
 
+    setLoadError(false);
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
@@ -53,7 +87,11 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
       const y = (CANVAS_HEIGHT - h) / 2;
       ctx.drawImage(img, x, y, w, h);
 
+      cacheBgPixels();
       setIsReady(true);
+    };
+    img.onerror = () => {
+      setLoadError(true);
     };
     img.src = imageUrl;
   }, [imageUrl]);
@@ -250,12 +288,14 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
       ctx.strokeStyle = activeColor;
     }
 
-    // Draw a dot for single tap/click
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, brushSize / 2, 0, Math.PI * 2);
-    ctx.fillStyle = activeTool === 'eraser' ? 'rgba(0,0,0,1)' : activeColor;
-    ctx.fill();
-  }, [getCanvasPoint, activeTool, activeColor, brushSize, handleFill]);
+    // Draw a dot for single tap/click (skip if near outline, unless eraser)
+    if (activeTool === 'eraser' || !isNearOutline(point.x, point.y, brushSize / 2)) {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, brushSize / 2, 0, Math.PI * 2);
+      ctx.fillStyle = activeTool === 'eraser' ? 'rgba(0,0,0,1)' : activeColor;
+      ctx.fill();
+    }
+  }, [getCanvasPoint, activeTool, activeColor, brushSize, handleFill, isNearOutline]);
 
   // Continue drawing
   const handlePointerMove = useCallback((e: React.MouseEvent | React.TouchEvent) => {
@@ -268,9 +308,34 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     const ctx = drawCanvasRef.current?.getContext('2d');
     if (!ctx) return;
 
+    // Check outline along the path from last point to current point
+    if (activeTool !== 'eraser') {
+      // Sample points along the line and check each with brush radius
+      const dx = point.x - lastPoint.current.x;
+      const dy = point.y - lastPoint.current.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const steps = Math.max(1, Math.ceil(dist / 2)); // check every 2px
+      let blocked = false;
+
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const sx = lastPoint.current.x + dx * t;
+        const sy = lastPoint.current.y + dy * t;
+        if (isNearOutline(sx, sy, brushSize / 2)) {
+          blocked = true;
+          break;
+        }
+      }
+
+      if (blocked) {
+        lastPoint.current = point;
+        return;
+      }
+    }
+
     drawLine(ctx, lastPoint.current, point);
     lastPoint.current = point;
-  }, [getCanvasPoint, drawLine]);
+  }, [getCanvasPoint, drawLine, activeTool, isNearOutline, brushSize]);
 
   // End drawing
   const handlePointerUp = useCallback((e: React.MouseEvent | React.TouchEvent) => {
@@ -316,9 +381,22 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
       className="relative w-full aspect-square max-h-[calc(100vh-12rem)] bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-purple-200"
       style={{ touchAction: 'none' }}
     >
-      {!isReady && (
+      {!isReady && !loadError && (
         <div className="absolute inset-0 flex items-center justify-center bg-white z-30">
-          <span className="text-4xl animate-bounce">🎨</span>
+          <div className="text-center">
+            <span className="text-4xl animate-bounce block mb-2">🎨</span>
+            <p className="text-sm font-bold text-purple-400">Görsel yükleniyor...</p>
+          </div>
+        </div>
+      )}
+
+      {loadError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white z-30">
+          <div className="text-center p-6">
+            <span className="text-4xl block mb-3">😢</span>
+            <p className="text-lg font-bold text-purple-800 mb-1">Görsel yüklenemedi</p>
+            <p className="text-sm text-purple-400">İnternet bağlantını kontrol edip tekrar dene</p>
+          </div>
         </div>
       )}
 

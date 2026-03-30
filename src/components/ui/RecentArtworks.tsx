@@ -42,7 +42,7 @@ export function RecentArtworks() {
             >
               <Link
                 href={artwork.status === 'in-progress'
-                  ? `/boya?image=${encodeURIComponent(artwork.originalImageUrl)}&artworkId=${artwork.id}`
+                  ? `/boya?artworkId=${artwork.id}`
                   : '/galeri'
                 }
                 className="block bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-lg border border-purple-100 hover:shadow-xl hover:scale-105 transition-all"
