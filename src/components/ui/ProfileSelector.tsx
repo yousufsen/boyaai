@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProfiles, saveProfile, setActiveProfileId } from '@/lib/storage';
 import { useProfileStore } from '@/store/profileStore';
+import { usePromptStore } from '@/store/promptStore';
 import type { ChildProfile } from '@/types/canvas';
 
 const AVATAR_EMOJIS = ['🦁', '🐱', '🐶', '🦄', '🐰', '🐼', '🦊', '🐸', '🦋', '🐙'];
@@ -19,6 +20,8 @@ export function ProfileSelector() {
   const handleSelect = (profile: ChildProfile) => {
     setActiveProfileId(profile.id);
     setProfile(profile);
+    usePromptStore.getState().reset();
+    localStorage.removeItem('boyaai-current-image');
   };
 
   const handleCreate = () => {
@@ -26,6 +29,8 @@ export function ProfileSelector() {
     const newProfile = saveProfile({ name: name.trim(), age, avatar });
     setActiveProfileId(newProfile.id);
     setProfile(newProfile);
+    usePromptStore.getState().reset();
+    localStorage.removeItem('boyaai-current-image');
   };
 
   return (

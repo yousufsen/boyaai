@@ -8,6 +8,7 @@ import { useProfileStore } from '@/store/profileStore';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { LOADING_MESSAGES } from '@/constants/limits';
 import { getDailyLimit, getDailyUsageCount, incrementDailyUsage } from '@/lib/storage';
+import { getRandomSuggestions } from '@/constants/inspirations';
 import type { GenerateResponse } from '@/types/canvas';
 import { SpeechModal } from '@/components/ui/SpeechModal';
 
@@ -19,33 +20,29 @@ export default function OlusturPageWrapper() {
   );
 }
 
-const SUGGESTIONS = [
-  { emoji: '🦄', text: 'Gökkuşağında koşan bir unicorn' },
-  { emoji: '🐉', text: 'Ateş püskürten sevimli ejderha' },
-  { emoji: '🧚', text: 'Çiçek bahçesinde peri kızı' },
-  { emoji: '🐳', text: 'Okyanusta yüzen mutlu balina' },
-  { emoji: '👨‍🚀', text: 'Ay\'da yürüyen astronot' },
-  { emoji: '🏴‍☠️', text: 'Hazine arayan korsan gemisi' },
-];
 
 function OlusturPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, reset } = usePromptStore();
+  const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, error, reset } = usePromptStore();
   const profile = useProfileStore((s) => s.profile);
   const { isListening, transcript, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition();
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
   const [showSpeechModal, setShowSpeechModal] = useState(false);
   const [dailyLimit, setDailyLimit] = useState(3);
   const [dailyUsed, setDailyUsed] = useState(0);
+  const [suggestions, setSuggestions] = useState(getRandomSuggestions(6));
 
-  // Load daily limit and usage from localStorage
+  // Reset state when profile changes
   useEffect(() => {
+    reset();
+    localStorage.removeItem('boyaai-current-image');
+    setSuggestions(getRandomSuggestions(6));
     setDailyLimit(getDailyLimit());
     if (profile) {
       setDailyUsed(getDailyUsageCount(profile.id));
     }
-  }, [profile]);
+  }, [profile?.id, reset]);
 
   // Set prompt from URL query
   useEffect(() => {
@@ -67,14 +64,14 @@ function OlusturPage() {
   const remaining = dailyLimit - dailyUsed;
 
   const handleGenerate = useCallback(async () => {
-    if (!prompt.trim() || !profile || dailyUsed >= dailyLimit) return;
+    if (!prompt.trim() || !profile) return;
 
     setStatus('generating');
     setLoadingMsgIndex(0);
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 90000);
+      const timeout = setTimeout(() => controller.abort(), 60000);
 
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -89,14 +86,14 @@ function OlusturPage() {
       if (data.success && data.imageUrl) {
         localStorage.setItem('boyaai-current-image', data.imageUrl);
         setImageUrl(data.imageUrl);
-        const newCount = incrementDailyUsage(profile.id);
-        setDailyUsed(newCount);
+        incrementDailyUsage(profile.id);
+        setDailyUsed(getDailyUsageCount(profile.id));
       } else {
-        setError(data.error || 'Bir hata oluştu.');
+        setError(data.error || 'Bir şeyler ters gitti, tekrar dene 🔄');
       }
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
-        setError('Biraz yoğunuz, tekrar dene! 🔄');
+        setError('İstek zaman aşımına uğradı, tekrar dene 🔄');
       } else {
         setError('Bağlantı hatası. Lütfen tekrar deneyin.');
       }
@@ -177,7 +174,7 @@ function OlusturPage() {
           {/* Generate button */}
           <button
             onClick={handleGenerate}
-            disabled={!prompt.trim() || status === 'generating' || remaining <= 0}
+            disabled={!prompt.trim() || status === 'generating'}
             className="flex-1 min-h-[56px] px-6 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-lg shadow-purple-300/50 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {status === 'generating' ? '⏳ Üretiliyor...' : '✨ Boyama Sayfası Üret'}
@@ -191,51 +188,32 @@ function OlusturPage() {
         )}
       </motion.div>
 
-      {/* Loading Animation — Balloon pop mini game */}
+      {/* Loading Animation */}
       <AnimatePresence>
         {status === 'generating' && (
           <motion.div
-            className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-purple-100 mb-8 text-center overflow-hidden"
+            className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-purple-100 mb-8 text-center"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-            {/* Floating balloons to pop */}
-            <p className="text-sm font-bold text-purple-400 mb-3">Beklerken balonları patlar! 🎈</p>
-            <div className="relative h-48 mb-4">
-              {['🎈', '🟡', '🔴', '🟢', '🔵', '🟣', '🟠'].map((balloon, i) => (
-                <motion.button
-                  key={`${i}-${loadingMsgIndex}`}
-                  className="absolute text-4xl cursor-pointer select-none hover:scale-125 transition-transform"
-                  style={{ left: `${10 + (i * 12)}%` }}
-                  initial={{ y: 200, opacity: 0 }}
-                  animate={{
-                    y: -20,
-                    opacity: 1,
-                    x: [0, (i % 2 === 0 ? 15 : -15), 0],
-                  }}
-                  transition={{
-                    y: { duration: 4 + i * 0.5, ease: 'easeOut', delay: i * 0.3 },
-                    x: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-                    opacity: { duration: 0.5, delay: i * 0.3 },
-                  }}
-                  whileTap={{ scale: [1, 2, 0], opacity: [1, 1, 0], transition: { duration: 0.3 } }}
-                >
-                  {balloon}
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Spinning emoji */}
             <motion.div
-              className="text-5xl mb-3"
+              className="text-5xl mb-4"
               animate={{ rotate: [0, 360] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             >
               🎨
             </motion.div>
 
-            {/* Changing messages */}
+            <div className="w-full max-w-xs mx-auto h-3 bg-purple-100 rounded-full overflow-hidden mb-4">
+              <motion.div
+                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                initial={{ width: '0%' }}
+                animate={{ width: '95%' }}
+                transition={{ duration: 15, ease: 'easeOut' }}
+              />
+            </div>
+
             <AnimatePresence mode="wait">
               <motion.p
                 key={loadingMsgIndex}
@@ -281,7 +259,7 @@ function OlusturPage() {
                 🖌️ Boyamaya Başla!
               </button>
               <button
-                onClick={reset}
+                onClick={() => { reset(); setSuggestions(getRandomSuggestions(6)); }}
                 className="min-h-[56px] px-8 rounded-2xl bg-white border-2 border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-all flex items-center justify-center gap-2"
               >
                 🔄 Yenisini Üret
@@ -300,9 +278,9 @@ function OlusturPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <p className="text-red-500 font-bold text-lg mb-3">😢 Bir şeyler ters gitti!</p>
+            <p className="text-red-500 font-bold text-lg mb-3">😢 {error || 'Bir şeyler ters gitti!'}</p>
             <button
-              onClick={reset}
+              onClick={() => { reset(); setSuggestions(getRandomSuggestions(6)); }}
               className="px-6 py-3 rounded-2xl bg-red-500 text-white font-bold hover:bg-red-600 transition-all"
             >
               Tekrar Dene
@@ -337,7 +315,7 @@ function OlusturPage() {
             💡 Fikir mi lazım?
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {SUGGESTIONS.map((s, i) => (
+            {suggestions.map((s, i) => (
               <button
                 key={i}
                 onClick={() => setPrompt(s.text)}

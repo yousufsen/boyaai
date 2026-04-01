@@ -16,7 +16,7 @@ export const COLORS = [
   { name: 'Gri', hex: '#808080' },
   { name: 'Siyah', hex: '#000000' },
   { name: 'Beyaz', hex: '#FFFFFF' },
-  { name: 'Altın', hex: '#FFD700' },
+  { name: 'Altın', hex: '#DAA520' },
   { name: 'Gümüş', hex: '#C0C0C0' },
 ] as const;
 

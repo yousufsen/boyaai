@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useCanvasStore } from '@/store/canvasStore';
 import Link from 'next/link';
 
@@ -71,12 +72,14 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
         </Link>
       </div>
 
-      {/* Clear confirmation dialog */}
-      {showConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-sm mx-4 text-center">
+      {/* Clear confirmation dialog — portalled to body so it escapes sidebar overflow */}
+      {showConfirm && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center">
             <div className="text-5xl mb-4">🗑️</div>
-            <h3 className="text-xl font-extrabold text-purple-800 mb-2">Emin misin?</h3>
+            <h3 className="text-xl font-extrabold text-purple-800 mb-2">
+              Boyamayı silmek istediğine emin misin?
+            </h3>
             <p className="text-purple-500 font-semibold mb-6">Tüm boyaman silinecek!</p>
             <div className="flex gap-3 justify-center">
               <button
@@ -96,7 +99,8 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

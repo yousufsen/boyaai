@@ -1,7 +1,7 @@
 /**
- * Simple 4-directional dilation of black pixels.
- * Makes every black pixel's 4 neighbors also black.
- * Thickens outlines by 1px in each direction.
+ * 8-directional dilation of black pixels (3x3 kernel).
+ * Makes every black pixel's 8 neighbors also black.
+ * Thickens outlines by 1px in each direction including diagonals.
  */
 export function dilateBlack(
   data: Buffer | Uint8Array,
@@ -15,12 +15,16 @@ export function dilateBlack(
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (data[y * width + x] === 0) {
-        // Set this pixel and its 4 neighbors to black
-        output[y * width + x] = 0;
-        if (x > 0) output[y * width + (x - 1)] = 0;
-        if (x < width - 1) output[y * width + (x + 1)] = 0;
-        if (y > 0) output[(y - 1) * width + x] = 0;
-        if (y < height - 1) output[(y + 1) * width + x] = 0;
+        // Set this pixel and all 8 neighbors (3x3 kernel) to black
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const ny = y + dy;
+            const nx = x + dx;
+            if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+              output[ny * width + nx] = 0;
+            }
+          }
+        }
       }
     }
   }

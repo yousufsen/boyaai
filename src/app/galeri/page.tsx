@@ -22,7 +22,12 @@ export default function GaleriPage() {
 
   const handleDelete = (id: string) => {
     deleteArtwork(id);
-    setArtworks(getArtworks());
+    const profileId = getActiveProfileId();
+    if (profileId) {
+      setArtworks(getArtworksForProfile(profileId));
+    } else {
+      setArtworks(getArtworks());
+    }
     setDeleteTarget(null);
     setSelectedArtwork(null);
   };

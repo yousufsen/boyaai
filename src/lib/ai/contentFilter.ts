@@ -1,16 +1,25 @@
 const BLOCKED_WORDS = [
-  // Violence
+  // Violence (TR)
   'şiddet', 'silah', 'tüfek', 'tabanca', 'bıçak', 'kılıç', 'savaş',
   'kan', 'ölüm', 'öldür', 'öldürmek', 'cinayet', 'kavga', 'dövüş',
   'mermi', 'bomba', 'patlama', 'yaralı', 'yarala',
-  // Horror
+  // Horror (TR)
   'korku', 'korkutucu', 'zombi', 'vampir', 'ceset', 'iskelet',
-  'hayalet', 'lanet', 'iblis', 'şeytan', 'kabuk', 'cehennem',
-  // Inappropriate
+  'hayalet', 'lanet', 'iblis', 'şeytan', 'cehennem',
+  // Inappropriate (TR)
   'çıplak', 'alkol', 'sigara', 'uyuşturucu', 'ilaç', 'zehir',
   'kumar', 'bahis',
-  // Hate
+  // Hate (TR)
   'nefret', 'ırkçı', 'ırkçılık', 'hakaret', 'küfür',
+  // Turkish profanity
+  'sik', 'siktir', 'amk', 'bok', 'orospu', 'piç', 'yarak', 'yarrak',
+  'göt', 'meme', 'penis', 'vajina', 'sex', 'seks', 'porn', 'porno',
+  'am', 'taşak', 'döl', 'sikiş', 'hentai',
+  // English inappropriate
+  'fuck', 'shit', 'dick', 'cock', 'pussy', 'ass', 'bitch', 'whore',
+  'nude', 'naked', 'nsfw', 'porn', 'xxx', 'sexy', 'boob', 'breast',
+  'kill', 'murder', 'blood', 'gore', 'torture', 'rape', 'suicide',
+  'gun', 'weapon', 'bomb', 'drug', 'cocaine', 'heroin',
 ];
 
 interface FilterResult {
@@ -19,15 +28,15 @@ interface FilterResult {
 }
 
 export function checkContentSafety(prompt: string): FilterResult {
-  const lower = prompt.toLowerCase();
+  const lower = prompt.toLowerCase().trim();
   const words = lower.split(/\s+/);
 
   for (const blocked of BLOCKED_WORDS) {
-    // Check both full word match and substring for compound words
-    if (words.includes(blocked) || lower.includes(blocked)) {
+    // Only match whole words — prevents "ressam" matching "am"
+    if (words.includes(blocked)) {
       return {
         safe: false,
-        reason: `Bu kelimeyi kullanamıyoruz: "${blocked}". Lütfen daha eğlenceli bir şey dene! 🌈`,
+        reason: 'Bu içerik uygun değil. Lütfen daha eğlenceli bir şey dene! 🌈',
       };
     }
   }

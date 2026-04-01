@@ -250,7 +250,7 @@ function enrichScene(translated: string): string {
 }
 
 export const COLORING_STYLE_SUFFIX =
-  'simple coloring book page, thick black outlines, white background, cartoon, no shading, no fill';
+  "children's coloring book page for ages 3-5, only thick black outlines on pure white background, every shape must be completely closed and enclosed, no open lines, no gaps in outlines, very simple shapes with minimal detail, maximum 8-10 large shapes, no shading, no gradients, no gray tones, no texture, no crosshatching, cute cartoon style, lines must be thick enough that a child can color inside them easily";
 
 export function buildImagePrompt(turkishPrompt: string): string {
   const englishCore = translatePrompt(turkishPrompt);

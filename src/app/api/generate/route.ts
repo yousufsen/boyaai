@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import OpenAI from 'openai';
 import sharp from 'sharp';
 import { buildImagePrompt } from '@/lib/ai/translatePrompt';
 import { checkContentSafety } from '@/lib/ai/contentFilter';
@@ -7,26 +8,20 @@ import { MOCK_COLORING_IMAGES } from '@/constants/limits';
 
 // In-memory daily rate limit per IP
 const dailyUsage = new Map<string, { count: number; date: string }>();
-const DAILY_LIMIT = 3;
+const DAILY_LIMIT = 20;
 
 function getTodayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
+function checkRateLimit(ip: string): boolean {
   const today = getTodayStr();
   const entry = dailyUsage.get(ip);
-
   if (!entry || entry.date !== today) {
     dailyUsage.set(ip, { count: 0, date: today });
-    return { allowed: true, remaining: DAILY_LIMIT };
+    return true;
   }
-
-  if (entry.count >= DAILY_LIMIT) {
-    return { allowed: false, remaining: 0 };
-  }
-
-  return { allowed: true, remaining: DAILY_LIMIT - entry.count };
+  return entry.count < DAILY_LIMIT;
 }
 
 function incrementUsage(ip: string) {
@@ -51,18 +46,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Rate limit check
+    // Rate limit
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
       || request.headers.get('x-real-ip')
       || 'unknown';
-    const rateCheck = checkRateLimit(ip);
-    if (!rateCheck.allowed) {
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
         { success: false, error: 'Bugünkü hakkın doldu! Yarın tekrar gel 🌟' },
         { status: 429 }
       );
     }
 
+    // Content safety
     const safety = checkContentSafety(prompt);
     if (!safety.safe) {
       return NextResponse.json(
@@ -72,108 +67,102 @@ export async function POST(request: Request) {
     }
 
     const imagePrompt = buildImagePrompt(prompt.trim());
-    console.log('[BoyaAI] Prompt:', imagePrompt.substring(0, 120) + '...');
+    console.log('[BoyaAI] Prompt:', imagePrompt);
 
-    // Read API key from server environment
-    const apiKey = process.env.POLLINATIONS_API_KEY?.trim();
+    // Check API key
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
     if (!apiKey) {
-      console.warn('[BoyaAI] POLLINATIONS_API_KEY not set in .env.local — using mock images');
+      console.warn('[BoyaAI] OPENAI_API_KEY not set — using mock images');
       return serveMock();
     }
 
-    const encodedPrompt = encodeURIComponent(imagePrompt);
+    // Generate image with OpenAI (with 1 retry on rate limit)
+    const openai = new OpenAI({ apiKey });
 
-    // Try Pollinations.ai endpoints in order
-    interface Endpoint {
-      name: string;
-      method: string;
-      url: string;
-      headers: Record<string, string>;
-      body?: string;
-      parseImage: (res: Response) => Promise<Buffer | null>;
-    }
-
-    const endpoints: Endpoint[] = [
-      {
-        name: 'Image API (key param)',
-        method: 'GET',
-        url: `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&model=flux&key=${encodeURIComponent(apiKey)}`,
-        headers: {},
-        parseImage: async (res: Response): Promise<Buffer | null> => {
-          const ct = res.headers.get('content-type') || '';
-          if (ct.startsWith('image/')) return Buffer.from(await res.arrayBuffer());
-          return null;
-        },
-      },
-      {
-        name: 'Image API (Bearer)',
-        method: 'GET',
-        url: `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&model=flux`,
-        headers: { 'Authorization': `Bearer ${apiKey}` },
-        parseImage: async (res: Response): Promise<Buffer | null> => {
-          const ct = res.headers.get('content-type') || '';
-          if (ct.startsWith('image/')) return Buffer.from(await res.arrayBuffer());
-          return null;
-        },
-      },
-      {
-        name: 'Image API (key param)',
-        method: 'GET',
-        url: `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&model=flux&key=${encodeURIComponent(apiKey)}`,
-        headers: {},
-        parseImage: async (res: Response): Promise<Buffer | null> => {
-          const ct = res.headers.get('content-type') || '';
-          if (ct.startsWith('image/')) return Buffer.from(await res.arrayBuffer());
-          return null;
-        },
-      },
-    ];
-
-    for (const ep of endpoints) {
-      console.log(`[BoyaAI] Trying: ${ep.name}`);
+    for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 60000);
-
-        const res = await fetch(ep.url, {
-          method: ep.method,
-          headers: ep.headers,
-          body: ep.body,
-          redirect: 'follow',
-          signal: controller.signal,
+        console.log(`[BoyaAI] Calling OpenAI gpt-image-1-mini (attempt ${attempt + 1})...`);
+        const response = await openai.images.generate({
+          model: 'gpt-image-1-mini',
+          prompt: imagePrompt,
+          n: 1,
+          size: '1024x1024',
+          quality: 'low',
         });
-        clearTimeout(timeout);
 
-        console.log(`[BoyaAI] ${ep.name}: status=${res.status} ct=${res.headers.get('content-type')}`);
-
-        if (!res.ok) {
-          const errText = await res.text().catch(() => '');
-          console.log(`[BoyaAI] ${ep.name} error:`, errText.substring(0, 300));
-          continue;
+        const imageData = response.data?.[0];
+        if (!imageData) {
+          console.error('[BoyaAI] No image data in response');
+          return serveMock();
         }
 
-        const rawBuffer = await ep.parseImage(res);
-        if (!rawBuffer || rawBuffer.length < 1000) {
-          console.log(`[BoyaAI] ${ep.name}: no valid image (${rawBuffer?.length || 0} bytes)`);
-          continue;
-        }
+        let rawBuffer: Buffer;
 
-        console.log(`[BoyaAI] ${ep.name}: raw ${(rawBuffer.length / 1024).toFixed(0)} KB`);
+        if (imageData.b64_json) {
+          rawBuffer = Buffer.from(imageData.b64_json, 'base64');
+          console.log('[BoyaAI] Got base64 image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
+        } else if (imageData.url) {
+          console.log('[BoyaAI] Got image URL, fetching...');
+          const imgRes = await fetch(imageData.url);
+          if (!imgRes.ok) {
+            console.error('[BoyaAI] Failed to fetch image URL:', imgRes.status);
+            return serveMock();
+          }
+          rawBuffer = Buffer.from(await imgRes.arrayBuffer());
+          console.log('[BoyaAI] Fetched image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
+        } else {
+          console.error('[BoyaAI] No image URL or b64_json in response');
+          return serveMock();
+        }
 
         const processed = await postProcess(rawBuffer);
-        console.log(`[BoyaAI] Processed: ${(processed.length / 1024).toFixed(0)} KB`);
+        console.log('[BoyaAI] Processed:', (processed.length / 1024).toFixed(0), 'KB');
 
-        // Count successful generation
         incrementUsage(ip);
 
         const dataUrl = `data:image/png;base64,${processed.toString('base64')}`;
         return NextResponse.json({ success: true, imageUrl: dataUrl, source: 'ai' });
       } catch (err) {
-        console.error(`[BoyaAI] ${ep.name} exception:`, err);
+        if (err instanceof OpenAI.APIError) {
+          console.error(`[BoyaAI] OpenAI API hatası: ${err.status} ${err.message}`);
+
+          if (err.status === 429) {
+            if (attempt === 0) {
+              console.log('[BoyaAI] Rate limited, 10 saniye bekleyip tekrar deneniyor...');
+              await new Promise((r) => setTimeout(r, 10000));
+              continue; // retry
+            }
+            return NextResponse.json(
+              { success: false, error: 'Çok hızlısın! 30 saniye bekle ve tekrar dene ⏳' },
+              { status: 429 }
+            );
+          }
+
+          if (err.status === 402) {
+            return NextResponse.json(
+              { success: false, error: 'API bakiyesi bitti 💰' },
+              { status: 502 }
+            );
+          }
+
+          if (err.status === 400) {
+            return NextResponse.json(
+              { success: false, error: 'Bu prompt ile görsel üretilemedi, başka bir şey dene 🔄' },
+              { status: 400 }
+            );
+          }
+
+          return NextResponse.json(
+            { success: false, error: 'Bir şeyler ters gitti, tekrar dene 🔄' },
+            { status: 502 }
+          );
+        }
+
+        console.error('[BoyaAI] Beklenmeyen hata:', err);
+        return serveMock();
       }
     }
 
-    console.log('[BoyaAI] All Pollinations endpoints failed, using mock');
     return serveMock();
   } catch (err) {
     console.error('[BoyaAI] Outer error:', err);
@@ -206,5 +195,6 @@ async function postProcess(rawBuffer: Buffer): Promise<Buffer> {
 
 function serveMock() {
   const idx = Math.floor(Math.random() * MOCK_COLORING_IMAGES.length);
+  console.log('[BoyaAI] Mock fallback:', MOCK_COLORING_IMAGES[idx]);
   return NextResponse.json({ success: true, imageUrl: MOCK_COLORING_IMAGES[idx], source: 'mock' });
 }
