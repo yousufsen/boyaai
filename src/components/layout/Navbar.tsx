@@ -8,6 +8,7 @@ import { SoundToggle } from '@/components/ui/SoundToggle';
 const NAV_ITEMS = [
   { href: '/', label: 'Ana Sayfa', icon: '🏠' },
   { href: '/olustur', label: 'Oluştur', icon: '✨' },
+  { href: '/kutuphane', label: 'Kütüphane', icon: '📚' },
   { href: '/galeri', label: 'Galeri', icon: '🖼️' },
 ];
 

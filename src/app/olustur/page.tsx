@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePromptStore } from '@/store/promptStore';
 import { useProfileStore } from '@/store/profileStore';
@@ -119,6 +120,12 @@ function OlusturPage() {
         <p className="text-purple-500 font-semibold">
           Hayal ettiğin sahneyi anlat, sana boyama sayfası yapalım!
         </p>
+        <Link
+          href="/kutuphane"
+          className="inline-block mt-3 text-sm font-bold text-purple-400 hover:text-purple-600 transition-colors"
+        >
+          veya 📚 hazır sayfalardan seç →
+        </Link>
       </motion.div>
 
       {/* Daily limit indicator */}
