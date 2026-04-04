@@ -13,6 +13,7 @@ interface ColoringCanvasProps {
 export interface ColoringCanvasHandle {
   getBgCanvas: () => HTMLCanvasElement | null;
   getDrawCanvas: () => HTMLCanvasElement | null;
+  getOutlineCanvas: () => HTMLCanvasElement | null;
 }
 
 /**
@@ -37,6 +38,7 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     useImperativeHandle(ref, () => ({
       getBgCanvas: () => bgCanvasRef.current,
       getDrawCanvas: () => drawCanvasRef.current,
+      getOutlineCanvas: () => outlineCanvasRef.current,
     }));
 
     const isDrawing = useRef(false);

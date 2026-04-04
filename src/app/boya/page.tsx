@@ -70,6 +70,7 @@ function BoyaPage() {
   const getMergedDataUrl = useCallback((): string | null => {
     const bgCanvas = canvasRef.current?.getBgCanvas();
     const drawCanvas = canvasRef.current?.getDrawCanvas();
+    const outlineCanvas = canvasRef.current?.getOutlineCanvas();
     if (!bgCanvas || !drawCanvas) return null;
 
     const mergedCanvas = document.createElement('canvas');
@@ -80,6 +81,9 @@ function BoyaPage() {
 
     ctx.drawImage(bgCanvas, 0, 0);
     ctx.drawImage(drawCanvas, 0, 0);
+    if (outlineCanvas) {
+      ctx.drawImage(outlineCanvas, 0, 0);
+    }
     return mergedCanvas.toDataURL('image/png');
   }, []);
 
