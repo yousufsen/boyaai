@@ -12,6 +12,7 @@ import { getDailyLimit, getDailyUsageCount, incrementDailyUsage } from '@/lib/st
 import { getRandomSuggestions } from '@/constants/inspirations';
 import type { GenerateResponse } from '@/types/canvas';
 import { SpeechModal } from '@/components/ui/SpeechModal';
+import { useTranslation } from '@/lib/i18n';
 
 export default function OlusturPageWrapper() {
   return (
@@ -27,23 +28,29 @@ function OlusturPage() {
   const router = useRouter();
   const { prompt, setPrompt, status, setStatus, imageUrl, setImageUrl, setError, error, reset } = usePromptStore();
   const profile = useProfileStore((s) => s.profile);
-  const { isListening, transcript, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition();
+  const { t, locale } = useTranslation();
+  const { isListening, transcript, isSupported, startListening, stopListening, resetTranscript } = useSpeechRecognition(locale);
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
   const [showSpeechModal, setShowSpeechModal] = useState(false);
   const [dailyLimit, setDailyLimit] = useState(3);
   const [dailyUsed, setDailyUsed] = useState(0);
-  const [suggestions, setSuggestions] = useState(getRandomSuggestions(6));
+  const [suggestions, setSuggestions] = useState(getRandomSuggestions(6, locale));
 
   // Reset state when profile changes
   useEffect(() => {
     reset();
     localStorage.removeItem('boyaai-current-image');
-    setSuggestions(getRandomSuggestions(6));
+    setSuggestions(getRandomSuggestions(6, locale));
     setDailyLimit(getDailyLimit());
     if (profile) {
       setDailyUsed(getDailyUsageCount(profile.id));
     }
-  }, [profile?.id, reset]);
+  }, [profile?.id, reset, locale]);
+
+  // Update suggestions when locale changes
+  useEffect(() => {
+    setSuggestions(getRandomSuggestions(6, locale));
+  }, [locale]);
 
   // Set prompt from URL query
   useEffect(() => {
@@ -115,16 +122,16 @@ function OlusturPage() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className="text-4xl font-extrabold text-purple-800 mb-2">
-          🎨 Boyama Sayfası Oluştur
+          {t('create.title')}
         </h1>
         <p className="text-purple-500 font-semibold">
-          Hayal ettiğin sahneyi anlat, sana boyama sayfası yapalım!
+          {t('create.subtitle')}
         </p>
         <Link
           href="/kutuphane"
           className="inline-block mt-3 text-sm font-bold text-purple-400 hover:text-purple-600 transition-colors"
         >
-          veya 📚 hazır sayfalardan seç →
+          {t('create.orLibrary')}
         </Link>
       </motion.div>
 
@@ -132,7 +139,7 @@ function OlusturPage() {
       <div className="flex justify-center mb-6">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-purple-100 shadow-sm">
           <span className="text-sm font-bold text-purple-600">
-            Bugün kalan hak:
+            {t('create.remainingLabel')}
           </span>
           <div className="flex gap-1">
             {Array.from({ length: dailyLimit }).map((_, i) => (
@@ -158,7 +165,7 @@ function OlusturPage() {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Örneğin: Uzayda yüzen bir astronot kedi 🐱🚀"
+            placeholder={t('create.placeholder')}
             className="w-full h-32 p-4 rounded-2xl bg-purple-50/50 border-2 border-purple-100 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none resize-none text-lg font-semibold text-purple-800 placeholder:text-purple-300 transition-all"
             disabled={status === 'generating'}
             maxLength={200}
@@ -175,7 +182,7 @@ function OlusturPage() {
             disabled={status === 'generating'}
             className="min-h-[56px] px-6 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 bg-purple-100 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
           >
-            🎤 Sesle Anlat
+            {t('create.voiceButton')}
           </button>
 
           {/* Generate button */}
@@ -184,13 +191,13 @@ function OlusturPage() {
             disabled={!prompt.trim() || status === 'generating'}
             className="flex-1 min-h-[56px] px-6 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-lg shadow-purple-300/50 hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {status === 'generating' ? '⏳ Üretiliyor...' : '✨ Boyama Sayfası Üret'}
+            {status === 'generating' ? t('create.generating') : t('create.generateButton')}
           </button>
         </div>
 
         {remaining <= 0 && (
           <p className="text-center text-red-400 font-bold mt-3 text-sm">
-            Bugünlük hakkın doldu! Yarın tekrar gel 😊
+            {t('create.dailyLimitReached')}
           </p>
         )}
       </motion.div>
@@ -245,7 +252,7 @@ function OlusturPage() {
             animate={{ opacity: 1, scale: 1 }}
           >
             <h2 className="text-2xl font-extrabold text-purple-800 mb-4">
-              🎉 Boyama Sayfan Hazır!
+              {t('create.resultTitle')}
             </h2>
 
             <div className="relative w-full max-w-md mx-auto aspect-square rounded-2xl overflow-hidden border-4 border-purple-200 shadow-lg mb-6 bg-white">
@@ -263,13 +270,13 @@ function OlusturPage() {
                 onClick={() => router.push('/boya?source=generated')}
                 className="min-h-[56px] px-8 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold text-lg shadow-lg shadow-green-200 hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
-                🖌️ Boyamaya Başla!
+                {t('create.startColoring')}
               </button>
               <button
-                onClick={() => { reset(); setSuggestions(getRandomSuggestions(6)); }}
+                onClick={() => { reset(); setSuggestions(getRandomSuggestions(6, locale)); }}
                 className="min-h-[56px] px-8 rounded-2xl bg-white border-2 border-purple-200 text-purple-600 font-bold text-lg hover:bg-purple-50 transition-all flex items-center justify-center gap-2"
               >
-                🔄 Yenisini Üret
+                {t('create.generateNew')}
               </button>
             </div>
           </motion.div>
@@ -285,9 +292,9 @@ function OlusturPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <p className="text-red-500 font-bold text-lg mb-3">😢 {error || 'Bir şeyler ters gitti!'}</p>
+            <p className="text-red-500 font-bold text-lg mb-3">😢 {error || t('create.error')}</p>
             <button
-              onClick={() => { reset(); setSuggestions(getRandomSuggestions(6)); }}
+              onClick={() => { reset(); setSuggestions(getRandomSuggestions(6, locale)); }}
               className="px-6 py-3 rounded-2xl bg-red-500 text-white font-bold hover:bg-red-600 transition-all"
             >
               Tekrar Dene
@@ -319,7 +326,7 @@ function OlusturPage() {
           transition={{ delay: 0.4 }}
         >
           <h3 className="text-xl font-extrabold text-purple-800 text-center mb-6">
-            💡 Fikir mi lazım?
+            {t('create.ideasTitle')}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {suggestions.map((s, i) => (

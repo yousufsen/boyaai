@@ -4,19 +4,25 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useProfileStore } from '@/store/profileStore';
 import { SoundToggle } from '@/components/ui/SoundToggle';
+import { LanguageToggle } from '@/components/ui/LanguageToggle';
+import { useTranslation } from '@/lib/i18n';
 
-const NAV_ITEMS = [
-  { href: '/', label: 'Ana Sayfa', icon: '🏠' },
-  { href: '/olustur', label: 'Oluştur', icon: '✨' },
-  { href: '/kutuphane', label: 'Kütüphane', icon: '📚' },
-  { href: '/galeri', label: 'Galeri', icon: '🖼️' },
-];
+function getNavItems(t: (key: string) => string) {
+  return [
+    { href: '/', label: t('nav.home'), icon: '🏠' },
+    { href: '/olustur', label: t('nav.create'), icon: '✨' },
+    { href: '/kutuphane', label: t('nav.library'), icon: '📚' },
+    { href: '/galeri', label: t('nav.gallery'), icon: '🖼️' },
+  ];
+}
 
 export function Navbar() {
   const pathname = usePathname();
   const profile = useProfileStore((s) => s.profile);
   const setProfile = useProfileStore((s) => s.setProfile);
+  const { t } = useTranslation();
   const isBoyaPage = pathname === '/boya';
+  const NAV_ITEMS = getNavItems(t);
 
   // Minimal navbar on painting page
   if (isBoyaPage) {
@@ -30,12 +36,13 @@ export function Navbar() {
             </span>
           </Link>
           <div className="flex items-center gap-2">
+            <LanguageToggle />
             <SoundToggle />
             <Link
               href="/olustur"
               className="px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 font-bold text-sm hover:bg-purple-200 transition-all"
             >
-              ✨ Yeni Sayfa
+              ✨ {t('nav.newPage')}
             </Link>
           </div>
         </div>
@@ -74,11 +81,12 @@ export function Navbar() {
               href="/olustur"
               className="px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-sm shadow-lg shadow-purple-200 hover:shadow-xl hover:scale-105 transition-all min-h-[48px] flex items-center"
             >
-              ✨ Hayalini Çiz
+              ✨ {t('nav.createButton')}
             </Link>
 
             <div className="w-px h-8 bg-purple-200" />
 
+            <LanguageToggle />
             <SoundToggle />
 
             <Link
@@ -106,6 +114,7 @@ export function Navbar() {
 
           {/* Mobile top-right: profile + sound */}
           <div className="md:hidden flex items-center gap-2">
+            <LanguageToggle />
             <SoundToggle />
             {profile && (
               <button

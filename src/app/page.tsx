@@ -6,31 +6,43 @@ import { motion } from 'framer-motion';
 import { RecentArtworks } from '@/components/ui/RecentArtworks';
 import { useProfileStore } from '@/store/profileStore';
 import { getRandomInspiration } from '@/constants/inspirations';
+import { useTranslation } from '@/lib/i18n';
 
 const FLOATING_EMOJIS = ['🎨', '🖌️', '🌈', '⭐', '🦄', '🎉', '🦋', '🌸'];
 
-const SAMPLE_PROMPTS = [
-  { emoji: '🦁', text: 'Ormanda oynayan bir aslan' },
-  { emoji: '🚀', text: 'Uzayda uçan bir roket' },
-  { emoji: '🧜‍♀️', text: 'Denizaltında bir deniz kızı' },
-  { emoji: '🏰', text: 'Büyülü bir prenses kalesi' },
-  { emoji: '🦖', text: 'Mutlu bir dinozor ailesi' },
-  { emoji: '🌊', text: 'Dalgalarda sörf yapan kedi' },
-];
-
-const STEPS = [
-  { emoji: '🗣️', title: 'Anlat', desc: 'Hayal ettiğin sahneyi anlat veya yaz' },
-  { emoji: '✨', title: 'Üret', desc: 'Yapay zeka boyama sayfanı çizsin' },
-  { emoji: '🎨', title: 'Boya', desc: 'Renklerle hayalini canlandır!' },
-];
+const SAMPLE_PROMPTS: Record<string, { emoji: string; text: string }[]> = {
+  tr: [
+    { emoji: '🦁', text: 'Ormanda oynayan bir aslan' },
+    { emoji: '🚀', text: 'Uzayda uçan bir roket' },
+    { emoji: '🧜‍♀️', text: 'Denizaltında bir deniz kızı' },
+    { emoji: '🏰', text: 'Büyülü bir prenses kalesi' },
+    { emoji: '🦖', text: 'Mutlu bir dinozor ailesi' },
+    { emoji: '🌊', text: 'Dalgalarda sörf yapan kedi' },
+  ],
+  en: [
+    { emoji: '🦁', text: 'A lion playing in the forest' },
+    { emoji: '🚀', text: 'A rocket flying in space' },
+    { emoji: '🧜‍♀️', text: 'A mermaid under the sea' },
+    { emoji: '🏰', text: 'A magical princess castle' },
+    { emoji: '🦖', text: 'A happy dinosaur family' },
+    { emoji: '🌊', text: 'A cat surfing on waves' },
+  ],
+};
 
 export default function Home() {
   const profile = useProfileStore((s) => s.profile);
   const [inspiration, setInspiration] = useState('');
+  const { t, locale } = useTranslation();
+
+  const STEPS = [
+    { emoji: '🗣️', title: t('home.step1Title'), desc: t('home.step1Desc') },
+    { emoji: '✨', title: t('home.step2Title'), desc: t('home.step2Desc') },
+    { emoji: '🎨', title: t('home.step3Title'), desc: t('home.step3Desc') },
+  ];
 
   useEffect(() => {
-    setInspiration(getRandomInspiration());
-  }, []);
+    setInspiration(getRandomInspiration(locale));
+  }, [locale]);
 
   return (
     <div className="relative overflow-hidden">
@@ -62,7 +74,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Merhaba {profile.name}! {profile.avatar}
+              {t('home.greeting', { name: profile.name })} {profile.avatar}
             </motion.p>
           )}
 
@@ -70,21 +82,21 @@ export default function Home() {
             {profile ? (
               <>
                 <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent">
-                  Bugün ne hayal
+                  {t('home.heroTitlePersonal1')}
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
-                  edeceksin?
+                  {t('home.heroTitlePersonal2')}
                 </span>
               </>
             ) : (
               <>
                 <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent">
-                  Hayal Et,
+                  {t('home.heroTitle1')}
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
-                  Boya!
+                  {t('home.heroTitle2')}
                 </span>
               </>
             )}
@@ -107,13 +119,13 @@ export default function Home() {
               href="/olustur"
               className="px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-xl shadow-purple-300/50 hover:shadow-2xl hover:scale-105 transition-all min-h-[56px] flex items-center justify-center gap-2"
             >
-              🚀 Hayalini Çiz!
+              {t('home.startButton')}
             </Link>
             <Link
               href="/galeri"
               className="px-8 py-4 rounded-2xl bg-white/80 border-2 border-purple-200 text-purple-600 font-extrabold text-lg hover:bg-purple-50 transition-all min-h-[56px] flex items-center justify-center gap-2"
             >
-              🖼️ Galeriye Bak
+              {t('home.galleryButton')}
             </Link>
           </div>
         </motion.div>
@@ -127,7 +139,7 @@ export default function Home() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          Nasıl Çalışır? 🤔
+          {t('home.howItWorks')}
         </motion.h2>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
@@ -159,14 +171,14 @@ export default function Home() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          Ne Çizmek İstersin? 🎯
+          {t('home.promptIdeas')}
         </motion.h2>
         <p className="text-center text-purple-500 mb-12 font-semibold">
-          Bir tanesine tıkla ve hemen başla!
+          {t('home.promptIdeasSub')}
         </p>
 
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
-          {SAMPLE_PROMPTS.map((item, i) => (
+          {(SAMPLE_PROMPTS[locale] || SAMPLE_PROMPTS.tr).map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -191,7 +203,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 text-center text-purple-400 font-semibold border-t border-purple-100/50">
-        <p>🎨 BoyaAI ile hayal gücünü keşfet! 🌈</p>
+        <p>{t('home.footer')}</p>
       </footer>
     </div>
   );

@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/lib/i18n';
 import { getArtworksForProfile, getActiveProfileId, getArtworks } from '@/lib/storage';
 import type { Artwork } from '@/types/canvas';
 
 export function RecentArtworks() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const profileId = getActiveProfileId();
@@ -25,10 +27,10 @@ export function RecentArtworks() {
         viewport={{ once: true }}
       >
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-4 text-purple-800">
-          Son Eserlerin 🎨
+          {t('home.recentTitle')}
         </h2>
         <p className="text-center text-purple-500 mb-10 font-semibold">
-          En son boyadığın resimler
+          {t('home.recentSub')}
         </p>
 
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -75,7 +77,7 @@ export function RecentArtworks() {
             href="/galeri"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/80 border-2 border-purple-200 text-purple-600 font-bold hover:bg-purple-50 hover:scale-105 transition-all"
           >
-            🖼️ Tümünü Gör
+            {t('home.viewAll')}
           </Link>
         </div>
       </motion.div>

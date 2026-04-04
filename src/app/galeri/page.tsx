@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getArtworksForProfile, deleteArtwork, getActiveProfileId, getArtworks } from '@/lib/storage';
+import { useTranslation } from '@/lib/i18n';
 import type { Artwork } from '@/types/canvas';
 
 export default function GaleriPage() {
+  const { t } = useTranslation();
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
@@ -52,17 +54,17 @@ export default function GaleriPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-4xl font-extrabold text-purple-800 mb-4">🖼️ Galeri</h1>
+          <h1 className="text-4xl font-extrabold text-purple-800 mb-4">{t('gallery.title')}</h1>
           <p className="text-purple-500 font-semibold mb-10">Boyadığın resimler burada görünecek!</p>
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-purple-100">
             <div className="text-6xl mb-4">🎨</div>
-            <h2 className="text-2xl font-extrabold text-purple-700 mb-2">Henüz eserin yok!</h2>
-            <p className="text-purple-400 font-semibold mb-6">Hadi bir tane oluştur ve boyamaya başla!</p>
+            <h2 className="text-2xl font-extrabold text-purple-700 mb-2">{t('gallery.empty')}</h2>
+            <p className="text-purple-400 font-semibold mb-6">{t('gallery.emptySub')}</p>
             <Link
               href="/olustur"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-xl hover:scale-105 transition-all"
             >
-              ✨ Hadi Başlayalım!
+              {t('gallery.emptyAction')}
             </Link>
           </div>
         </motion.div>
@@ -77,8 +79,8 @@ export default function GaleriPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl font-extrabold text-purple-800 mb-2">🖼️ Galeri</h1>
-        <p className="text-purple-500 font-semibold">{artworks.length} eser</p>
+        <h1 className="text-4xl font-extrabold text-purple-800 mb-2">{t('gallery.title')}</h1>
+        <p className="text-purple-500 font-semibold">{t('gallery.artworkCount', { count: artworks.length })}</p>
       </motion.div>
 
       {/* Grid */}
@@ -115,7 +117,7 @@ export default function GaleriPage() {
                     ? 'bg-green-100 text-green-700'
                     : 'bg-amber-100 text-amber-700'
                 }`}>
-                  {artwork.status === 'completed' ? '✅ Bitti' : '🖌️ Devam'}
+                  {artwork.status === 'completed' ? t('gallery.completed') : t('gallery.inProgress')}
                 </div>
               </div>
 
@@ -168,7 +170,7 @@ export default function GaleriPage() {
                   onClick={() => handleDownload(selectedArtwork)}
                   className="px-5 py-2.5 rounded-2xl bg-green-100 text-green-700 font-bold hover:bg-green-200 transition-all min-h-[44px] flex items-center gap-1"
                 >
-                  📥 PNG İndir
+                  {t('gallery.downloadPng')}
                 </button>
                 <button
                   onClick={() => setDeleteTarget(selectedArtwork.id)}
@@ -180,7 +182,7 @@ export default function GaleriPage() {
                   onClick={() => setSelectedArtwork(null)}
                   className="ml-auto px-5 py-2.5 rounded-2xl bg-gray-100 text-gray-600 font-bold hover:bg-gray-200 transition-all min-h-[44px]"
                 >
-                  Kapat
+                  {t('common.close')}
                 </button>
               </div>
             </motion.div>
@@ -204,14 +206,14 @@ export default function GaleriPage() {
               exit={{ scale: 0.8 }}
             >
               <div className="text-5xl mb-4">🗑️</div>
-              <h3 className="text-xl font-extrabold text-purple-800 mb-2">Eseri silmek istediğine emin misin?</h3>
-              <p className="text-purple-500 font-semibold mb-6 text-sm">Bu işlem geri alınamaz!</p>
+              <h3 className="text-xl font-extrabold text-purple-800 mb-2">{t('gallery.deleteConfirmTitle')}</h3>
+              <p className="text-purple-500 font-semibold mb-6 text-sm">{t('gallery.deleteConfirmDesc')}</p>
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={() => setDeleteTarget(null)}
                   className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-all min-h-[48px]"
                 >
-                  Vazgeç
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => handleDelete(deleteTarget)}

@@ -13,9 +13,11 @@ import {
   getArtworksForProfile,
 } from '@/lib/storage';
 import type { ChildProfile, ParentSettings } from '@/types/canvas';
+import { useTranslation } from '@/lib/i18n';
 import { Toast } from '@/components/ui/Toast';
 
 export default function EbeveynPage() {
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pin, setPin] = useState('');
   const [pinError, setPinError] = useState(false);
@@ -64,7 +66,7 @@ export default function EbeveynPage() {
     }
     saveParentSettings(updated);
     setSettings(updated);
-    showToastMessage(pinChanged ? '🔒 PIN güncellendi!' : '✅ Ayarlar kaydedildi!');
+    showToastMessage(pinChanged ? t('parent.pinUpdated') : t('parent.settingsSaved'));
   };
 
   const handleClearAll = () => {
@@ -89,8 +91,8 @@ export default function EbeveynPage() {
           animate={{ opacity: 1, scale: 1 }}
         >
           <div className="text-5xl mb-4">🔒</div>
-          <h1 className="text-2xl font-extrabold text-purple-800 mb-2">Ebeveyn Paneli</h1>
-          <p className="text-purple-500 font-semibold text-sm mb-6">4 haneli PIN kodunu gir</p>
+          <h1 className="text-2xl font-extrabold text-purple-800 mb-2">{t('parent.title')}</h1>
+          <p className="text-purple-500 font-semibold text-sm mb-6">{t('parent.pinTitle')}</p>
 
           <div className="flex justify-center gap-3 mb-4">
             {[0, 1, 2, 3].map((i) => (
@@ -149,7 +151,7 @@ export default function EbeveynPage() {
           </div>
 
           {pinError && (
-            <p className="text-red-500 font-bold text-sm mb-3">Yanlış PIN! Tekrar dene.</p>
+            <p className="text-red-500 font-bold text-sm mb-3">{t('parent.wrongPin')}</p>
           )}
 
           <button
@@ -157,11 +159,11 @@ export default function EbeveynPage() {
             disabled={pin.length !== 4}
             className="w-full min-h-[48px] rounded-2xl bg-purple-500 text-white font-bold hover:bg-purple-600 transition-all disabled:opacity-40"
           >
-            Giriş Yap
+            {t('parent.login')}
           </button>
 
           <Link href="/" className="inline-block mt-4 text-sm font-bold text-purple-400 hover:text-purple-600">
-            ← Ana Sayfaya Dön
+            {t('parent.backHome')}
           </Link>
         </motion.div>
       </div>
@@ -175,18 +177,18 @@ export default function EbeveynPage() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-extrabold text-purple-800">👨‍👩‍👧 Ebeveyn Paneli</h1>
+          <h1 className="text-3xl font-extrabold text-purple-800">👨‍👩‍👧 {t('parent.title')}</h1>
           <Link href="/" className="px-4 py-2 rounded-full bg-purple-100 text-purple-700 font-bold text-sm hover:bg-purple-200 transition-all">
-            ← Geri
+            {t('common.back')}
           </Link>
         </div>
 
         {/* Profiles section */}
         <section className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-purple-100 mb-6">
-          <h2 className="text-xl font-extrabold text-purple-800 mb-4">👧 Çocuk Profilleri</h2>
+          <h2 className="text-xl font-extrabold text-purple-800 mb-4">{t('parent.profiles')}</h2>
 
           {profiles.length === 0 ? (
-            <p className="text-purple-400 font-semibold text-center py-4">Henüz profil yok</p>
+            <p className="text-purple-400 font-semibold text-center py-4">{t('parent.noProfiles')}</p>
           ) : (
             <div className="space-y-3">
               {profiles.map((p) => {
@@ -217,12 +219,12 @@ export default function EbeveynPage() {
 
         {/* Settings section */}
         <section className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-purple-100 mb-6">
-          <h2 className="text-xl font-extrabold text-purple-800 mb-4">⚙️ Ayarlar</h2>
+          <h2 className="text-xl font-extrabold text-purple-800 mb-4">{t('parent.settings')}</h2>
 
           {/* Daily limit */}
           <div className="mb-6">
             <label className="text-sm font-bold text-purple-600 mb-2 block">
-              Günlük Kullanım Limiti: <span className="text-purple-800 text-lg">{settings.dailyLimit}</span>
+              {t('parent.dailyLimit')} <span className="text-purple-800 text-lg">{settings.dailyLimit}</span>
             </label>
             <input
               type="range"
@@ -235,12 +237,12 @@ export default function EbeveynPage() {
             <div className="flex justify-between text-xs font-bold text-purple-300 mt-1">
               <span>1</span><span>10</span>
             </div>
-            <p className="text-xs text-purple-400 mt-2">Çocuğunuz günde kaç boyama sayfası üretebilsin?</p>
+            <p className="text-xs text-purple-400 mt-2">{t('parent.dailyLimitDesc')}</p>
           </div>
 
           {/* Change PIN */}
           <div className="mb-6">
-            <label className="text-sm font-bold text-purple-600 mb-2 block">Yeni PIN (4 haneli):</label>
+            <label className="text-sm font-bold text-purple-600 mb-2 block">{t('parent.newPin')}</label>
             <input
               type="number"
               value={newPin}
@@ -255,18 +257,18 @@ export default function EbeveynPage() {
             onClick={handleSaveSettings}
             className="w-full min-h-[48px] rounded-2xl bg-purple-500 text-white font-bold hover:bg-purple-600 transition-all"
           >
-            Ayarları Kaydet
+            {t('parent.saveSettings')}
           </button>
         </section>
 
         {/* Danger zone */}
         <section className="bg-red-50/80 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-red-200">
-          <h2 className="text-xl font-extrabold text-red-600 mb-4">⚠️ Tehlikeli Bölge</h2>
+          <h2 className="text-xl font-extrabold text-red-600 mb-4">{t('parent.dangerZone')}</h2>
           <button
             onClick={() => setShowClearConfirm(true)}
             className="w-full min-h-[48px] rounded-2xl bg-red-500 text-white font-bold hover:bg-red-600 transition-all"
           >
-            Tüm Verileri Sil
+            {t('parent.clearAll')}
           </button>
         </section>
       </motion.div>
@@ -277,10 +279,10 @@ export default function EbeveynPage() {
           <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div className="bg-white rounded-3xl p-8 shadow-2xl max-w-sm mx-4 text-center" initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}>
               <div className="text-5xl mb-4">👧</div>
-              <h3 className="text-xl font-extrabold text-purple-800 mb-2">Profili silmek istediğine emin misin?</h3>
-              <p className="text-purple-500 font-semibold mb-6 text-sm">Tüm eserleri de silinecek!</p>
+              <h3 className="text-xl font-extrabold text-purple-800 mb-2">{t('parent.deleteProfileConfirm')}</h3>
+              <p className="text-purple-500 font-semibold mb-6 text-sm">{t('parent.deleteProfileDesc')}</p>
               <div className="flex gap-3 justify-center">
-                <button onClick={() => setDeleteTargetId(null)} className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold min-h-[48px]">Vazgeç</button>
+                <button onClick={() => setDeleteTargetId(null)} className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold min-h-[48px]">{t('common.cancel')}</button>
                 <button onClick={() => handleDeleteProfile(deleteTargetId)} className="px-6 py-3 rounded-2xl bg-red-500 text-white font-bold min-h-[48px]">Evet, Sil</button>
               </div>
             </motion.div>
@@ -294,10 +296,10 @@ export default function EbeveynPage() {
           <motion.div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div className="bg-white rounded-3xl p-8 shadow-2xl max-w-sm mx-4 text-center" initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}>
               <div className="text-5xl mb-4">⚠️</div>
-              <h3 className="text-xl font-extrabold text-red-600 mb-2">Tüm veriler silinecek!</h3>
-              <p className="text-red-400 font-semibold mb-6 text-sm">Profiller, eserler, ayarlar... Her şey gidecek!</p>
+              <h3 className="text-xl font-extrabold text-red-600 mb-2">{t('parent.clearConfirmTitle')}</h3>
+              <p className="text-red-400 font-semibold mb-6 text-sm">{t('parent.clearConfirmDesc')}</p>
               <div className="flex gap-3 justify-center">
-                <button onClick={() => setShowClearConfirm(false)} className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold min-h-[48px]">Vazgeç</button>
+                <button onClick={() => setShowClearConfirm(false)} className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold min-h-[48px]">{t('common.cancel')}</button>
                 <button onClick={handleClearAll} className="px-6 py-3 rounded-2xl bg-red-500 text-white font-bold min-h-[48px]">Evet, Sil</button>
               </div>
             </motion.div>

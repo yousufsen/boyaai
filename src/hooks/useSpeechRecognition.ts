@@ -48,7 +48,7 @@ interface UseSpeechRecognitionReturn {
   resetTranscript: () => void;
 }
 
-export function useSpeechRecognition(): UseSpeechRecognitionReturn {
+export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitionReturn {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
@@ -59,7 +59,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
     if (SpeechRecognition) {
       setIsSupported(true);
       const recognition = new SpeechRecognition();
-      recognition.lang = 'tr-TR';
+      recognition.lang = locale === 'en' ? 'en-US' : 'tr-TR';
       recognition.continuous = true;
       recognition.interimResults = true;
 
@@ -81,7 +81,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
 
       recognitionRef.current = recognition;
     }
-  }, []);
+  }, [locale]);
 
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {

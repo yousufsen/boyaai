@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { STOCK_CATEGORIES } from '@/constants/stockLibrary';
+import { STOCK_CATEGORIES, CATEGORY_NAMES_EN, IMAGE_TITLES_EN } from '@/constants/stockLibrary';
+import { useTranslation } from '@/lib/i18n';
 
 export default function KutuphanePage() {
+  const { t, locale } = useTranslation();
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState(STOCK_CATEGORIES[0]?.id || '');
 
@@ -21,15 +23,15 @@ export default function KutuphanePage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
         <div className="text-6xl mb-4">📚</div>
-        <h1 className="text-3xl font-extrabold text-purple-800 mb-4">Kütüphane Henüz Hazır Değil</h1>
+        <h1 className="text-3xl font-extrabold text-purple-800 mb-4">{t('library.notReady')}</h1>
         <p className="text-purple-500 font-semibold mb-6">
-          Stok boyama sayfaları henüz indirilmemiş.
+          {t('library.notReadySub')}
         </p>
         <Link
           href="/olustur"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-xl hover:scale-105 transition-all"
         >
-          ✨ Kendi Sayfanı Oluştur
+          {t('library.createOwn')}
         </Link>
       </div>
     );
@@ -42,8 +44,8 @@ export default function KutuphanePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl font-extrabold text-purple-800 mb-2">📚 Boyama Kütüphanesi</h1>
-        <p className="text-purple-500 font-semibold">Hazır boyama sayfalarından birini seç ve boyamaya başla!</p>
+        <h1 className="text-4xl font-extrabold text-purple-800 mb-2">{t('library.title')}</h1>
+        <p className="text-purple-500 font-semibold">{t('library.subtitle')}</p>
       </motion.div>
 
       {/* Category tabs */}
@@ -59,7 +61,7 @@ export default function KutuphanePage() {
                   : 'bg-white/80 text-purple-600 hover:bg-purple-100 border border-purple-100'
               }`}
             >
-              {cat.emoji} {cat.name}
+              {cat.emoji} {locale === 'en' ? (CATEGORY_NAMES_EN[cat.id] || cat.name) : cat.name}
             </button>
           ))}
         </div>
@@ -87,7 +89,7 @@ export default function KutuphanePage() {
                 />
               </div>
               <div className="p-2.5">
-                <p className="text-xs font-bold text-purple-800 truncate">{img.title}</p>
+                <p className="text-xs font-bold text-purple-800 truncate">{locale === 'en' ? (IMAGE_TITLES_EN[img.title] || img.title) : img.title}</p>
               </div>
             </motion.button>
           ))}
@@ -97,7 +99,7 @@ export default function KutuphanePage() {
       {category && category.images.length === 0 && (
         <div className="text-center py-12">
           <div className="text-5xl mb-3">🖼️</div>
-          <p className="text-purple-400 font-bold">Bu kategoride henüz görsel yok</p>
+          <p className="text-purple-400 font-bold">{t('library.empty')}</p>
         </div>
       )}
     </div>

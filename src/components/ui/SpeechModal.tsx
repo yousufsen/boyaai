@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '@/lib/i18n';
 
 interface SpeechModalProps {
   isOpen: boolean;
@@ -24,6 +25,8 @@ export function SpeechModal({
   onConfirm,
   onClose,
 }: SpeechModalProps) {
+  const { t } = useTranslation();
+
   // Auto-start listening when modal opens
   useEffect(() => {
     if (isOpen && isSupported && !isListening) {
@@ -49,15 +52,15 @@ export function SpeechModal({
               exit={{ scale: 0.8 }}
             >
               <div className="text-5xl mb-4">😔</div>
-              <h3 className="text-xl font-extrabold text-purple-800 mb-2">Ses Tanıma Desteklenmiyor</h3>
+              <h3 className="text-xl font-extrabold text-purple-800 mb-2">{t('speech.notSupported')}</h3>
               <p className="text-purple-500 font-semibold mb-6 text-sm">
-                Tarayıcın ses tanımayı desteklemiyor. Chrome veya Edge kullanmayı dene!
+                {t('speech.notSupportedDesc')}
               </p>
               <button
                 onClick={onClose}
                 className="px-6 py-3 rounded-2xl bg-purple-500 text-white font-bold hover:bg-purple-600 transition-all min-h-[48px]"
               >
-                Tamam
+                {t('common.close')}
               </button>
             </motion.div>
           </motion.div>
@@ -109,12 +112,12 @@ export function SpeechModal({
             </div>
 
             <h3 className="text-2xl font-extrabold text-purple-800 mb-2">
-              {isListening ? 'Seni dinliyorum...' : 'Hazır!'}
+              {isListening ? t('speech.listening') : t('speech.ready')}
             </h3>
             <p className="text-purple-400 font-semibold text-sm mb-4">
               {isListening
-                ? 'Hayal ettiğin sahneyi anlat!'
-                : 'Mikrofona tekrar bas veya metni onayla'}
+                ? t('speech.listeningSub')
+                : t('speech.readySub')}
             </p>
 
             {/* Live transcript */}
@@ -123,7 +126,7 @@ export function SpeechModal({
                 <p className="text-lg font-bold text-purple-800">{transcript}</p>
               ) : (
                 <p className="text-purple-300 font-semibold italic">
-                  {isListening ? 'Konuşmaya başla...' : 'Henüz bir şey söylenmedi'}
+                  {isListening ? t('speech.speakNow') : t('speech.nothingSaid')}
                 </p>
               )}
             </div>
@@ -135,14 +138,14 @@ export function SpeechModal({
                   onClick={onStop}
                   className="px-6 py-3 rounded-2xl bg-red-500 text-white font-bold text-lg hover:bg-red-600 transition-all min-h-[52px] flex items-center gap-2"
                 >
-                  ⏹️ Durdur
+                  {t('speech.stop')}
                 </button>
               ) : (
                 <button
                   onClick={onStart}
                   className="px-6 py-3 rounded-2xl bg-purple-100 text-purple-700 font-bold text-lg hover:bg-purple-200 transition-all min-h-[52px] flex items-center gap-2"
                 >
-                  🔄 Tekrar Dene
+                  {t('speech.tryAgain')}
                 </button>
               )}
 
@@ -156,7 +159,7 @@ export function SpeechModal({
                 disabled={!transcript}
                 className="px-6 py-3 rounded-2xl bg-green-500 text-white font-bold text-lg hover:bg-green-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed min-h-[52px] flex items-center gap-2"
               >
-                ✅ Tamam
+                {t('speech.confirm')}
               </button>
 
               <button

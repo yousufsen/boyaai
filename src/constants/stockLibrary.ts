@@ -16,6 +16,54 @@ export interface StockCategory {
   images: StockImage[];
 }
 
+// English translations for category names
+export const CATEGORY_NAMES_EN: Record<string, string> = {
+  hayvanlar: 'Animals',
+  uzay: 'Space',
+  deniz: 'Sea & Ocean',
+  masallar: 'Fairy Tales & Fantasy',
+  araclar: 'Vehicles',
+  doga: 'Nature & Flowers',
+  dinozorlar: 'Dinosaurs',
+  yiyecekler: 'Food',
+  sehir: 'Home & City',
+  tatil: 'Holidays',
+};
+
+// English translations for image titles
+export const IMAGE_TITLES_EN: Record<string, string> = {
+  'Sevimli Kedi': 'Cute Cat', 'Neşeli Köpek': 'Happy Puppy', 'Cesur Aslan': 'Brave Lion',
+  'Kocaman Fil': 'Big Elephant', 'Güzel Kelebek': 'Beautiful Butterfly', 'Şirin Tavşan': 'Cute Bunny',
+  'Renkli Balık': 'Colorful Fish', 'Ötücü Kuş': 'Singing Bird', 'Zarif At': 'Graceful Horse', 'Tatlı Ayı': 'Sweet Bear',
+  'Roket': 'Rocket', 'Astronot': 'Astronaut', 'Gezegen': 'Planet', 'Yıldızlar': 'Stars',
+  'Uzaylı': 'Alien', 'Uzay Gemisi': 'Spaceship', 'Ay': 'Moon', 'Güneş': 'Sun', 'Satürn': 'Saturn', 'UFO': 'UFO',
+  'Balina': 'Whale', 'Yunus': 'Dolphin', 'Ahtapot': 'Octopus', 'Deniz Atı': 'Seahorse',
+  'Kaplumbağa': 'Turtle', 'Yengeç': 'Crab', 'Denizanası': 'Jellyfish', 'Köpekbalığı': 'Shark',
+  'Deniz Kızı': 'Mermaid', 'Deniz Yıldızı': 'Starfish',
+  'Prenses': 'Princess', 'Kale': 'Castle', 'Ejderha': 'Dragon', 'Unicorn': 'Unicorn',
+  'Peri': 'Fairy', 'Şövalye': 'Knight', 'Büyücü': 'Wizard', 'Taç': 'Crown',
+  'Sihirli Lamba': 'Magic Lamp', 'Korsan': 'Pirate',
+  'Araba': 'Car', 'Kamyon': 'Truck', 'Uçak': 'Airplane', 'Tren': 'Train',
+  'Helikopter': 'Helicopter', 'Gemi': 'Ship', 'Bisiklet': 'Bicycle', 'Otobüs': 'School Bus',
+  'Motosiklet': 'Motorcycle', 'İtfaiye': 'Fire Truck',
+  'Çiçek Bahçesi': 'Flower Garden', 'Büyük Ağaç': 'Big Tree', 'Gökkuşağı': 'Rainbow',
+  'Dağ Manzarası': 'Mountain Landscape', 'Şelale': 'Waterfall', 'Mantar': 'Mushroom',
+  'Yaprak': 'Leaf', 'Gül': 'Rose', 'Ayçiçeği': 'Sunflower', 'Orman': 'Forest',
+  'T-Rex': 'T-Rex', 'Triceratops': 'Triceratops', 'Stegosaurus': 'Stegosaurus',
+  'Pterodactyl': 'Pterodactyl', 'Brontosaurus': 'Brontosaurus', 'Raptor': 'Raptor',
+  'Dinozor Yumurtası': 'Dinosaur Egg', 'Yanardağ': 'Volcano', 'Bebek Dino': 'Baby Dino', 'Dino Ailesi': 'Dino Family',
+  'Pasta': 'Cake', 'Dondurma': 'Ice Cream', 'Pizza': 'Pizza', 'Meyveler': 'Fruits',
+  'Cupcake': 'Cupcake', 'Kurabiye': 'Cookie', 'Donut': 'Donut', 'Şeker': 'Candy',
+  'Hamburger': 'Hamburger', 'Karpuz': 'Watermelon',
+  'Ev': 'House', 'Binalar': 'Buildings', 'Okul': 'School', 'Oyun Parkı': 'Playground',
+  'Park': 'Park', 'Köprü': 'Bridge', 'Deniz Feneri': 'Lighthouse',
+  'Yel Değirmeni': 'Windmill', 'Çiftlik': 'Farm', 'Tren İstasyonu': 'Train Station',
+  'Noel Ağacı': 'Christmas Tree', 'Cadılar Bayramı': 'Halloween', 'Paskalya': 'Easter',
+  'Doğum Günü': 'Birthday', 'Kardan Adam': 'Snowman', 'Noel Baba': 'Santa Claus',
+  'Balkabağı': 'Pumpkin', 'Sevgililer Günü': 'Valentine\'s Day', 'Havai Fişek': 'Fireworks',
+  'Hediye Kutusu': 'Gift Box',
+};
+
 export const STOCK_CATEGORIES: StockCategory[] = [
   {
     "id": "hayvanlar",

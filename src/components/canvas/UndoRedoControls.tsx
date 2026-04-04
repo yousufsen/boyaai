@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCanvasStore } from '@/store/canvasStore';
 import Link from 'next/link';
+import { useTranslation } from '@/lib/i18n';
 
 interface UndoRedoControlsProps {
   onSave: () => void;
@@ -12,18 +13,19 @@ interface UndoRedoControlsProps {
 
 export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
   const { actions, undoneActions, undo, redo } = useCanvasStore();
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <>
       <div className="flex md:flex-col gap-2">
-        <p className="hidden md:block text-xs font-bold text-purple-400 uppercase tracking-wider mb-1">İşlemler</p>
+        <p className="hidden md:block text-xs font-bold text-purple-400 uppercase tracking-wider mb-1">{t('paint.actions')}</p>
 
         {/* Undo */}
         <button
           onClick={undo}
           disabled={actions.length === 0}
-          title="Geri Al"
+          title={t('paint.undo')}
           className="w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xl bg-white/80 hover:bg-purple-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ↩️
@@ -33,7 +35,7 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
         <button
           onClick={redo}
           disabled={undoneActions.length === 0}
-          title="Yinele"
+          title={t('paint.redo')}
           className="w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xl bg-white/80 hover:bg-purple-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         >
           ↪️
@@ -47,7 +49,7 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
         <button
           onClick={() => setShowConfirm(true)}
           disabled={actions.length === 0}
-          title="Temizle"
+          title={t('paint.clear')}
           className="w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xl bg-white/80 hover:bg-red-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         >
           🗑️
@@ -56,7 +58,7 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
         {/* Save */}
         <button
           onClick={onSave}
-          title="Kaydet"
+          title={t('paint.save')}
           className="w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xl bg-green-100 hover:bg-green-200 transition-all"
         >
           💾
@@ -65,7 +67,7 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
         {/* New page */}
         <Link
           href="/olustur"
-          title="Yeni Sayfa"
+          title={t('paint.newPage')}
           className="w-12 h-12 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xl bg-amber-100 hover:bg-amber-200 transition-all"
         >
           ✨
@@ -78,15 +80,15 @@ export function UndoRedoControls({ onSave, onClear }: UndoRedoControlsProps) {
           <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center">
             <div className="text-5xl mb-4">🗑️</div>
             <h3 className="text-xl font-extrabold text-purple-800 mb-2">
-              Boyamayı silmek istediğine emin misin?
+              {t('paint.clearConfirmTitle')}
             </h3>
-            <p className="text-purple-500 font-semibold mb-6">Tüm boyaman silinecek!</p>
+            <p className="text-purple-500 font-semibold mb-6">{t('paint.clearConfirmDesc')}</p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="px-6 py-3 rounded-2xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-all min-h-[48px]"
               >
-                Vazgeç
+                {t('common.cancel')}
               </button>
               <button
                 onClick={() => {

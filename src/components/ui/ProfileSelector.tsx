@@ -6,11 +6,13 @@ import { getProfiles, saveProfile, setActiveProfileId } from '@/lib/storage';
 import { useProfileStore } from '@/store/profileStore';
 import { usePromptStore } from '@/store/promptStore';
 import type { ChildProfile } from '@/types/canvas';
+import { useTranslation } from '@/lib/i18n';
 
 const AVATAR_EMOJIS = ['🦁', '🐱', '🐶', '🦄', '🐰', '🐼', '🦊', '🐸', '🦋', '🐙'];
 
 export function ProfileSelector() {
   const { setProfile } = useProfileStore();
+  const { t } = useTranslation();
   const [profiles] = useState<ChildProfile[]>(getProfiles());
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
@@ -44,7 +46,7 @@ export function ProfileSelector() {
         <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent mb-2">
           BoyaAI
         </h1>
-        <p className="text-xl font-bold text-purple-600 mb-10">Kim boyayacak? 🖌️</p>
+        <p className="text-xl font-bold text-purple-600 mb-10">{t('profile.whoColors')}</p>
 
         {/* Existing profiles */}
         {profiles.length > 0 && !showCreate && (
@@ -75,21 +77,21 @@ export function ProfileSelector() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
             >
-              <h2 className="text-2xl font-extrabold text-purple-800 mb-6">Yeni Profil 🌟</h2>
+              <h2 className="text-2xl font-extrabold text-purple-800 mb-6">{t('profile.newProfileTitle')}</h2>
 
               {/* Name */}
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Adın ne?"
+                placeholder={t('profile.nameLabel')}
                 maxLength={20}
                 className="w-full px-5 py-4 rounded-2xl bg-purple-50 border-2 border-purple-100 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none text-lg font-bold text-purple-800 placeholder:text-purple-300 mb-4"
               />
 
               {/* Age slider */}
               <div className="mb-6">
-                <p className="text-sm font-bold text-purple-500 mb-2">Yaş: <span className="text-purple-800 text-lg">{age}</span></p>
+                <p className="text-sm font-bold text-purple-500 mb-2">{t('profile.ageLabel')} <span className="text-purple-800 text-lg">{age}</span></p>
                 <input
                   type="range"
                   min={3}
@@ -104,7 +106,7 @@ export function ProfileSelector() {
               </div>
 
               {/* Avatar selection */}
-              <p className="text-sm font-bold text-purple-500 mb-3">Avatar seç:</p>
+              <p className="text-sm font-bold text-purple-500 mb-3">{t('profile.avatarLabel')}</p>
               <div className="flex flex-wrap gap-2 justify-center mb-6">
                 {AVATAR_EMOJIS.map((emoji) => (
                   <button
@@ -126,14 +128,14 @@ export function ProfileSelector() {
                   onClick={() => setShowCreate(false)}
                   className="flex-1 min-h-[52px] rounded-2xl bg-gray-100 text-gray-600 font-bold hover:bg-gray-200 transition-all"
                 >
-                  Vazgeç
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={handleCreate}
                   disabled={!name.trim()}
                   className="flex-1 min-h-[52px] rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50"
                 >
-                  Başla! 🚀
+                  {t('profile.create')}
                 </button>
               </div>
             </motion.div>
@@ -145,7 +147,7 @@ export function ProfileSelector() {
             onClick={() => setShowCreate(true)}
             className="w-full min-h-[56px] rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-extrabold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2"
           >
-            ➕ Yeni Profil Oluştur
+            {t('profile.newProfile')}
           </button>
         )}
       </motion.div>

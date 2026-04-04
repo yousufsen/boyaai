@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playTadaSound } from '@/lib/sounds';
+import { useTranslation } from '@/lib/i18n';
 
 interface CompletionCelebrationProps {
   show: boolean;
@@ -15,6 +16,7 @@ const CONFETTI = ['🎉', '🎊', '⭐', '🌟', '✨', '💫', '🎨', '🌈', 
 
 export function CompletionCelebration({ show, onComplete, onDismiss }: CompletionCelebrationProps) {
   const [stars, setStars] = useState(0);
+  const { t } = useTranslation();
 
   const handleShow = () => {
     playTadaSound();
@@ -64,8 +66,8 @@ export function CompletionCelebration({ show, onComplete, onDismiss }: Completio
               🎉
             </motion.div>
 
-            <h2 className="text-3xl font-black text-purple-800 mb-2">Harika Olmuş!</h2>
-            <p className="text-purple-500 font-semibold mb-6">Boyaman çok güzel! Kaç yıldız verirsin?</p>
+            <h2 className="text-3xl font-black text-purple-800 mb-2">{t('celebration.title')}</h2>
+            <p className="text-purple-500 font-semibold mb-6">{t('celebration.subtitle')}</p>
 
             {/* Star rating */}
             <div className="flex justify-center gap-3 mb-3">
@@ -98,13 +100,13 @@ export function CompletionCelebration({ show, onComplete, onDismiss }: Completio
                 onClick={onDismiss}
                 className="flex-1 min-h-[48px] rounded-2xl bg-gray-100 text-gray-600 font-bold hover:bg-gray-200 transition-all"
               >
-                Atla
+                {t('celebration.skip')}
               </button>
               <button
                 onClick={() => onComplete(stars || 1)}
                 className="flex-1 min-h-[48px] rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-extrabold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
               >
-                Kaydet! 💾
+                {t('celebration.saveButton')}
               </button>
             </div>
           </motion.div>
