@@ -1,32 +1,48 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '@/lib/i18n';
 
 export function LanguageToggle() {
   const { locale, setLocale } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
 
   return (
-    <div className="flex items-center bg-white/80 rounded-full shadow-sm border border-purple-100 p-0.5">
+    <div ref={ref} className="relative">
       <button
-        onClick={() => setLocale('tr')}
-        className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
-          locale === 'tr'
-            ? 'bg-purple-500 text-white shadow-sm'
-            : 'text-purple-400 hover:text-purple-600'
-        }`}
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-0.5 px-2 py-1.5 rounded-lg bg-white/60 hover:bg-white/80 text-xs font-bold text-purple-600 transition-all"
       >
-        🇹🇷 TR
+        {locale.toUpperCase()} <span className="text-[8px] ml-0.5">▼</span>
       </button>
-      <button
-        onClick={() => setLocale('en')}
-        className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
-          locale === 'en'
-            ? 'bg-purple-500 text-white shadow-sm'
-            : 'text-purple-400 hover:text-purple-600'
-        }`}
-      >
-        🇬🇧 EN
-      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-purple-100 overflow-hidden z-50 min-w-[130px]">
+          <button
+            onClick={() => { setLocale('tr'); setOpen(false); }}
+            className={`w-full px-3 py-2 text-left text-sm font-bold flex items-center gap-2 hover:bg-purple-50 transition-all ${locale === 'tr' ? 'text-purple-700 bg-purple-50' : 'text-gray-600'}`}
+          >
+            🇹🇷 Türkçe
+          </button>
+          <button
+            onClick={() => { setLocale('en'); setOpen(false); }}
+            className={`w-full px-3 py-2 text-left text-sm font-bold flex items-center gap-2 hover:bg-purple-50 transition-all ${locale === 'en' ? 'text-purple-700 bg-purple-50' : 'text-gray-600'}`}
+          >
+            🇺🇸 English
+          </button>
+        </div>
+      )}
     </div>
   );
 }

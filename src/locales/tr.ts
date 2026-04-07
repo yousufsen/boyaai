@@ -21,6 +21,7 @@ export const tr = {
     createButton: 'Hayalini Çiz',
     parent: 'Ebeveyn',
     newPage: 'Yeni Sayfa',
+    freeDraw: 'Serbest Çizim',
   },
   home: {
     greeting: 'Merhaba {name}!',
@@ -150,6 +151,15 @@ export const tr = {
     stop: '⏹️ Durdur',
     tryAgain: '🔄 Tekrar Dene',
     confirm: '✅ Tamam',
+  },
+  draw: {
+    title: '✏️ Serbest Çizim',
+    subtitle: 'Hayalindeki her şeyi çiz!',
+    line: 'Çizgi',
+    background: 'Arkaplan',
+    fill: 'Boya Kovası',
+    saveToGallery: 'Galeriye Kaydet',
+    drawing: '✏️ Çizim',
   },
   toast: {
     saved: '✅ Eserin kaydedildi!',

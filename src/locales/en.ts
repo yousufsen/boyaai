@@ -21,6 +21,7 @@ export const en = {
     createButton: 'Draw Your Dream',
     parent: 'Parent',
     newPage: 'New Page',
+    freeDraw: 'Free Draw',
   },
   home: {
     greeting: 'Hello {name}!',
@@ -150,6 +151,15 @@ export const en = {
     stop: '⏹️ Stop',
     tryAgain: '🔄 Try Again',
     confirm: '✅ OK',
+  },
+  draw: {
+    title: '✏️ Free Drawing',
+    subtitle: 'Draw anything you imagine!',
+    line: 'Line',
+    background: 'Background',
+    fill: 'Fill Bucket',
+    saveToGallery: 'Save to Gallery',
+    drawing: '✏️ Drawing',
   },
   toast: {
     saved: '✅ Artwork saved!',

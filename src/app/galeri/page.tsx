@@ -117,7 +117,9 @@ export default function GaleriPage() {
                     ? 'bg-green-100 text-green-700'
                     : 'bg-amber-100 text-amber-700'
                 }`}>
-                  {artwork.status === 'completed' ? t('gallery.completed') : t('gallery.inProgress')}
+                  {artwork.prompt === 'Serbest Çizim' || artwork.prompt === 'Free Drawing'
+                    ? t('draw.drawing')
+                    : artwork.status === 'completed' ? t('gallery.completed') : t('gallery.inProgress')}
                 </div>
               </div>
 

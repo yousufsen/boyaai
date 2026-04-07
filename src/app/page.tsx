@@ -198,6 +198,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Free Draw CTA */}
+      <section className="py-12 px-4">
+        <motion.div
+          className="max-w-md mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <Link
+            href="/ciz"
+            className="block bg-gradient-to-r from-amber-100 to-orange-100 rounded-3xl p-8 text-center shadow-xl border border-amber-200 hover:shadow-2xl hover:scale-[1.02] transition-all"
+          >
+            <div className="text-5xl mb-3">✏️</div>
+            <h3 className="text-2xl font-extrabold text-purple-800 mb-2">{t('draw.title')}</h3>
+            <p className="text-purple-500 font-semibold">{t('draw.subtitle')}</p>
+          </Link>
+        </motion.div>
+      </section>
+
       {/* Recent Artworks */}
       <RecentArtworks />
 
