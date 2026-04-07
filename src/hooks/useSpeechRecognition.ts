@@ -5,6 +5,12 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
   results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
+
+interface SpeechRecognitionResultItem {
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal: boolean;
 }
 
 interface SpeechRecognitionResultList {
@@ -12,7 +18,7 @@ interface SpeechRecognitionResultList {
   [index: number]: SpeechRecognitionResult;
 }
 
-interface SpeechRecognitionResult {
+interface SpeechRecognitionResult extends SpeechRecognitionResultItem {
   [index: number]: SpeechRecognitionAlternative;
 }
 
@@ -50,9 +56,12 @@ interface UseSpeechRecognitionReturn {
 
 export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitionReturn {
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
+  const [finalText, setFinalText] = useState('');
+  const [interimText, setInterimText] = useState('');
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+
+  const transcript = (finalText + (interimText ? ' ' + interimText : '')).trim();
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition as (new () => SpeechRecognitionInstance) | undefined;
@@ -64,11 +73,24 @@ export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitio
       recognition.interimResults = true;
 
       recognition.onresult = (event) => {
-        let finalTranscript = '';
-        for (let i = 0; i < event.results.length; i++) {
-          finalTranscript += event.results[i][0].transcript;
+        let newFinal = '';
+        let interim = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const text = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            newFinal += text + ' ';
+          } else {
+            interim += text;
+          }
         }
-        setTranscript(finalTranscript);
+
+        if (newFinal) {
+          setFinalText((prev) => (prev + ' ' + newFinal).trim());
+          setInterimText('');
+        } else {
+          setInterimText(interim);
+        }
       };
 
       recognition.onerror = () => {
@@ -77,6 +99,7 @@ export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitio
 
       recognition.onend = () => {
         setIsListening(false);
+        setInterimText('');
       };
 
       recognitionRef.current = recognition;
@@ -85,7 +108,8 @@ export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitio
 
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
-      setTranscript('');
+      setFinalText('');
+      setInterimText('');
       recognitionRef.current.start();
       setIsListening(true);
     }
@@ -95,11 +119,13 @@ export function useSpeechRecognition(locale: string = 'tr'): UseSpeechRecognitio
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
       setIsListening(false);
+      setInterimText('');
     }
   }, [isListening]);
 
   const resetTranscript = useCallback(() => {
-    setTranscript('');
+    setFinalText('');
+    setInterimText('');
   }, []);
 
   return {
