@@ -18,6 +18,10 @@ import { useProfileStore } from '@/store/profileStore';
 import { saveArtwork, updateArtwork, getArtwork } from '@/lib/storage';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '@/constants/limits';
 import { playTadaSound } from '@/lib/sounds';
+import { useTranslation } from '@/lib/i18n';
+import { EDUCATIONAL_FACTS } from '@/constants/educationalFacts';
+import { EducationalCard } from '@/components/ui/EducationalCard';
+import { STOCK_CATEGORIES, IMAGE_TITLES_EN } from '@/constants/stockLibrary';
 
 export default function BoyaPageWrapper() {
   return (
@@ -36,8 +40,10 @@ function BoyaPage() {
   const clearCanvas = useCanvasStore((s) => s.clearCanvas);
   const prompt = usePromptStore((s) => s.prompt);
   const profile = useProfileStore((s) => s.profile);
+  const { locale } = useTranslation();
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showEduCard, setShowEduCard] = useState(true);
   const [currentArtworkId, setCurrentArtworkId] = useState<string | null>(artworkId);
   const [initialDrawingData, setInitialDrawingData] = useState<string | null>(null);
   const [resolvedImageUrl, setResolvedImageUrl] = useState<string | null>(null);
@@ -220,7 +226,7 @@ function BoyaPage() {
       </aside>
 
       {/* Canvas area */}
-      <div className="flex-1 flex items-center justify-center p-3 md:p-6 overflow-hidden">
+      <div className="flex-1 flex items-center justify-center p-3 md:p-6 overflow-hidden relative">
         <motion.div
           className="w-full max-w-[calc(100vh-14rem)] md:max-w-[calc(100vh-8rem)]"
           initial={{ opacity: 0, scale: 0.95 }}
@@ -233,6 +239,32 @@ function BoyaPage() {
             initialDrawingDataUrl={initialDrawingData}
           />
         </motion.div>
+
+        {/* Educational fact card */}
+        {showEduCard && (() => {
+          // Extract stock image ID from path
+          const path = resolvedImageUrl || '';
+          const match = path.match(/stock-coloring\/[^/]+\/([^.]+)/);
+          const stockId = match?.[1] || '';
+          const fact = EDUCATIONAL_FACTS[stockId];
+          if (!fact) return null;
+
+          // Find title from stock library
+          let title = stockId;
+          for (const cat of STOCK_CATEGORIES) {
+            const img = cat.images.find((i) => i.filename.replace('.png', '') === stockId);
+            if (img) {
+              title = locale === 'en' ? (IMAGE_TITLES_EN[img.title] || img.title) : img.title;
+              break;
+            }
+          }
+
+          return (
+            <div className="absolute top-4 right-4 z-30 hidden md:block">
+              <EducationalCard fact={fact} title={title} onClose={() => setShowEduCard(false)} />
+            </div>
+          );
+        })()}
       </div>
 
       {/* Mobile bottom bar */}
