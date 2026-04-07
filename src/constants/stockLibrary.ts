@@ -28,6 +28,10 @@ export const CATEGORY_NAMES_EN: Record<string, string> = {
   yiyecekler: 'Food',
   sehir: 'Home & City',
   tatil: 'Holidays',
+  alfabe: 'Alphabet',
+  sayilar: 'Numbers',
+  gezegenler: 'Planets',
+  alphabet: 'Alphabet',
 };
 
 // English translations for image titles
@@ -62,6 +66,77 @@ export const IMAGE_TITLES_EN: Record<string, string> = {
   'Doğum Günü': 'Birthday', 'Kardan Adam': 'Snowman', 'Noel Baba': 'Santa Claus',
   'Balkabağı': 'Pumpkin', 'Sevgililer Günü': 'Valentine\'s Day', 'Havai Fişek': 'Fireworks',
   'Hediye Kutusu': 'Gift Box',
+  'A - Aslan': 'A - Lion',
+  'B - Balon': 'B - Balloon',
+  'C - Cüzdan': 'C - Wallet',
+  'Ç - Çiçek': 'Ç - Flower',
+  'D - Davul': 'D - Drum',
+  'E - Elma': 'E - Apple',
+  'F - Fil': 'F - Elephant',
+  'G - Gemi': 'G - Ship',
+  'Ğ': 'Ğ',
+  'H - Horoz': 'H - Rooster',
+  'I - Iguana': 'I - Iguana',
+  'İ - İnek': 'İ - Cow',
+  'J - Jip': 'J - Jeep',
+  'K - Kedi': 'K - Cat',
+  'L - Lale': 'L - Tulip',
+  'M - Maymun': 'M - Monkey',
+  'N - Nar': 'N - Pomegranate',
+  'O - Otobüs': 'O - Bus',
+  'Ö - Ördek': 'Ö - Duck',
+  'P - Papağan': 'P - Parrot',
+  'R - Robot': 'R - Robot',
+  'S - Salyangoz': 'S - Snail',
+  'Ş - Şemsiye': 'Ş - Umbrella',
+  'T - Tavşan': 'T - Rabbit',
+  'U - Uçak': 'U - Airplane',
+  'Ü - Üzüm': 'Ü - Grapes',
+  'V - Vazo': 'V - Vase',
+  'Y - Yıldız': 'Y - Star',
+  'Z - Zürafa': 'Z - Giraffe',
+  'A - Apple': 'A - Apple',
+  'B - Ball': 'B - Ball',
+  'C - Cat': 'C - Cat',
+  'D - Dog': 'D - Dog',
+  'E - Elephant': 'E - Elephant',
+  'F - Fish': 'F - Fish',
+  'G - Giraffe': 'G - Giraffe',
+  'H - House': 'H - House',
+  'I - Ice Cream': 'I - Ice Cream',
+  'J - Jellyfish': 'J - Jellyfish',
+  'K - Kite': 'K - Kite',
+  'L - Lion': 'L - Lion',
+  'M - Monkey': 'M - Monkey',
+  'N - Nest': 'N - Nest',
+  'O - Orange': 'O - Orange',
+  'P - Pizza': 'P - Pizza',
+  'Q - Queen': 'Q - Queen',
+  'R - Rabbit': 'R - Rabbit',
+  'S - Sun': 'S - Sun',
+  'T - Tree': 'T - Tree',
+  'U - Umbrella': 'U - Umbrella',
+  'V - Violin': 'V - Violin',
+  'W - Whale': 'W - Whale',
+  'X - Xylophone': 'X - Xylophone',
+  'Y - Yacht': 'Y - Yacht',
+  'Z - Zebra': 'Z - Zebra',
+  '1 - Bir': '1 - One',
+  '2 - İki': '2 - Two',
+  '3 - Üç': '3 - Three',
+  '4 - Dört': '4 - Four',
+  '5 - Beş': '5 - Five',
+  '6 - Altı': '6 - Six',
+  '7 - Yedi': '7 - Seven',
+  '8 - Sekiz': '8 - Eight',
+  '9 - Dokuz': '9 - Nine',
+  '10 - On': '10 - Ten',
+  'Merkür': 'Mercury',
+  'Venüs': 'Venus',
+  'Dünya': 'Earth',
+  'Mars': 'Mars',
+  'Uranüs': 'Uranus',
+  'Neptün': 'Neptune',
 };
 
 export const STOCK_CATEGORIES: StockCategory[] = [
@@ -835,6 +910,561 @@ export const STOCK_CATEGORIES: StockCategory[] = [
       }
     ]
   }
+,
+  {
+  "id": "alfabe",
+  "name": "Alfabe",
+  "emoji": "🔤",
+  "images": [
+    {
+      "id": "al01",
+      "filename": "alfabe-A.png",
+      "path": "/stock-coloring/alfabe/alfabe-A.png",
+      "category": "alfabe",
+      "title": "A - Aslan"
+    },
+    {
+      "id": "al02",
+      "filename": "alfabe-B.png",
+      "path": "/stock-coloring/alfabe/alfabe-B.png",
+      "category": "alfabe",
+      "title": "B - Balon"
+    },
+    {
+      "id": "al03",
+      "filename": "alfabe-C.png",
+      "path": "/stock-coloring/alfabe/alfabe-C.png",
+      "category": "alfabe",
+      "title": "C - Cüzdan"
+    },
+    {
+      "id": "al04",
+      "filename": "alfabe-C-ced.png",
+      "path": "/stock-coloring/alfabe/alfabe-C-ced.png",
+      "category": "alfabe",
+      "title": "Ç - Çiçek"
+    },
+    {
+      "id": "al05",
+      "filename": "alfabe-D.png",
+      "path": "/stock-coloring/alfabe/alfabe-D.png",
+      "category": "alfabe",
+      "title": "D - Davul"
+    },
+    {
+      "id": "al06",
+      "filename": "alfabe-E.png",
+      "path": "/stock-coloring/alfabe/alfabe-E.png",
+      "category": "alfabe",
+      "title": "E - Elma"
+    },
+    {
+      "id": "al07",
+      "filename": "alfabe-F.png",
+      "path": "/stock-coloring/alfabe/alfabe-F.png",
+      "category": "alfabe",
+      "title": "F - Fil"
+    },
+    {
+      "id": "al08",
+      "filename": "alfabe-G.png",
+      "path": "/stock-coloring/alfabe/alfabe-G.png",
+      "category": "alfabe",
+      "title": "G - Gemi"
+    },
+    {
+      "id": "al09",
+      "filename": "alfabe-G-soft.png",
+      "path": "/stock-coloring/alfabe/alfabe-G-soft.png",
+      "category": "alfabe",
+      "title": "Ğ"
+    },
+    {
+      "id": "al10",
+      "filename": "alfabe-H.png",
+      "path": "/stock-coloring/alfabe/alfabe-H.png",
+      "category": "alfabe",
+      "title": "H - Horoz"
+    },
+    {
+      "id": "al11",
+      "filename": "alfabe-I.png",
+      "path": "/stock-coloring/alfabe/alfabe-I.png",
+      "category": "alfabe",
+      "title": "I - Iguana"
+    },
+    {
+      "id": "al12",
+      "filename": "alfabe-I-dot.png",
+      "path": "/stock-coloring/alfabe/alfabe-I-dot.png",
+      "category": "alfabe",
+      "title": "İ - İnek"
+    },
+    {
+      "id": "al13",
+      "filename": "alfabe-J.png",
+      "path": "/stock-coloring/alfabe/alfabe-J.png",
+      "category": "alfabe",
+      "title": "J - Jip"
+    },
+    {
+      "id": "al14",
+      "filename": "alfabe-K.png",
+      "path": "/stock-coloring/alfabe/alfabe-K.png",
+      "category": "alfabe",
+      "title": "K - Kedi"
+    },
+    {
+      "id": "al15",
+      "filename": "alfabe-L.png",
+      "path": "/stock-coloring/alfabe/alfabe-L.png",
+      "category": "alfabe",
+      "title": "L - Lale"
+    },
+    {
+      "id": "al16",
+      "filename": "alfabe-M.png",
+      "path": "/stock-coloring/alfabe/alfabe-M.png",
+      "category": "alfabe",
+      "title": "M - Maymun"
+    },
+    {
+      "id": "al17",
+      "filename": "alfabe-N.png",
+      "path": "/stock-coloring/alfabe/alfabe-N.png",
+      "category": "alfabe",
+      "title": "N - Nar"
+    },
+    {
+      "id": "al18",
+      "filename": "alfabe-O.png",
+      "path": "/stock-coloring/alfabe/alfabe-O.png",
+      "category": "alfabe",
+      "title": "O - Otobüs"
+    },
+    {
+      "id": "al19",
+      "filename": "alfabe-O-uml.png",
+      "path": "/stock-coloring/alfabe/alfabe-O-uml.png",
+      "category": "alfabe",
+      "title": "Ö - Ördek"
+    },
+    {
+      "id": "al20",
+      "filename": "alfabe-P.png",
+      "path": "/stock-coloring/alfabe/alfabe-P.png",
+      "category": "alfabe",
+      "title": "P - Papağan"
+    },
+    {
+      "id": "al21",
+      "filename": "alfabe-R.png",
+      "path": "/stock-coloring/alfabe/alfabe-R.png",
+      "category": "alfabe",
+      "title": "R - Robot"
+    },
+    {
+      "id": "al22",
+      "filename": "alfabe-S.png",
+      "path": "/stock-coloring/alfabe/alfabe-S.png",
+      "category": "alfabe",
+      "title": "S - Salyangoz"
+    },
+    {
+      "id": "al23",
+      "filename": "alfabe-S-ced.png",
+      "path": "/stock-coloring/alfabe/alfabe-S-ced.png",
+      "category": "alfabe",
+      "title": "Ş - Şemsiye"
+    },
+    {
+      "id": "al24",
+      "filename": "alfabe-T.png",
+      "path": "/stock-coloring/alfabe/alfabe-T.png",
+      "category": "alfabe",
+      "title": "T - Tavşan"
+    },
+    {
+      "id": "al25",
+      "filename": "alfabe-U.png",
+      "path": "/stock-coloring/alfabe/alfabe-U.png",
+      "category": "alfabe",
+      "title": "U - Uçak"
+    },
+    {
+      "id": "al26",
+      "filename": "alfabe-U-uml.png",
+      "path": "/stock-coloring/alfabe/alfabe-U-uml.png",
+      "category": "alfabe",
+      "title": "Ü - Üzüm"
+    },
+    {
+      "id": "al27",
+      "filename": "alfabe-V.png",
+      "path": "/stock-coloring/alfabe/alfabe-V.png",
+      "category": "alfabe",
+      "title": "V - Vazo"
+    },
+    {
+      "id": "al28",
+      "filename": "alfabe-Y.png",
+      "path": "/stock-coloring/alfabe/alfabe-Y.png",
+      "category": "alfabe",
+      "title": "Y - Yıldız"
+    },
+    {
+      "id": "al29",
+      "filename": "alfabe-Z.png",
+      "path": "/stock-coloring/alfabe/alfabe-Z.png",
+      "category": "alfabe",
+      "title": "Z - Zürafa"
+    }
+  ]
+},
+  {
+  "id": "sayilar",
+  "name": "Sayılar",
+  "emoji": "🔢",
+  "images": [
+    {
+      "id": "sa01",
+      "filename": "sayilar-01.png",
+      "path": "/stock-coloring/sayilar/sayilar-01.png",
+      "category": "sayilar",
+      "title": "1 - Bir"
+    },
+    {
+      "id": "sa02",
+      "filename": "sayilar-02.png",
+      "path": "/stock-coloring/sayilar/sayilar-02.png",
+      "category": "sayilar",
+      "title": "2 - İki"
+    },
+    {
+      "id": "sa03",
+      "filename": "sayilar-03.png",
+      "path": "/stock-coloring/sayilar/sayilar-03.png",
+      "category": "sayilar",
+      "title": "3 - Üç"
+    },
+    {
+      "id": "sa04",
+      "filename": "sayilar-04.png",
+      "path": "/stock-coloring/sayilar/sayilar-04.png",
+      "category": "sayilar",
+      "title": "4 - Dört"
+    },
+    {
+      "id": "sa05",
+      "filename": "sayilar-05.png",
+      "path": "/stock-coloring/sayilar/sayilar-05.png",
+      "category": "sayilar",
+      "title": "5 - Beş"
+    },
+    {
+      "id": "sa06",
+      "filename": "sayilar-06.png",
+      "path": "/stock-coloring/sayilar/sayilar-06.png",
+      "category": "sayilar",
+      "title": "6 - Altı"
+    },
+    {
+      "id": "sa07",
+      "filename": "sayilar-07.png",
+      "path": "/stock-coloring/sayilar/sayilar-07.png",
+      "category": "sayilar",
+      "title": "7 - Yedi"
+    },
+    {
+      "id": "sa08",
+      "filename": "sayilar-08.png",
+      "path": "/stock-coloring/sayilar/sayilar-08.png",
+      "category": "sayilar",
+      "title": "8 - Sekiz"
+    },
+    {
+      "id": "sa09",
+      "filename": "sayilar-09.png",
+      "path": "/stock-coloring/sayilar/sayilar-09.png",
+      "category": "sayilar",
+      "title": "9 - Dokuz"
+    },
+    {
+      "id": "sa10",
+      "filename": "sayilar-10.png",
+      "path": "/stock-coloring/sayilar/sayilar-10.png",
+      "category": "sayilar",
+      "title": "10 - On"
+    }
+  ]
+},
+  {
+  "id": "gezegenler",
+  "name": "Gezegenler",
+  "emoji": "🪐",
+  "images": [
+    {
+      "id": "ge01",
+      "filename": "gezegenler-01.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-01.png",
+      "category": "gezegenler",
+      "title": "Güneş"
+    },
+    {
+      "id": "ge02",
+      "filename": "gezegenler-02.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-02.png",
+      "category": "gezegenler",
+      "title": "Merkür"
+    },
+    {
+      "id": "ge03",
+      "filename": "gezegenler-03.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-03.png",
+      "category": "gezegenler",
+      "title": "Venüs"
+    },
+    {
+      "id": "ge04",
+      "filename": "gezegenler-04.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-04.png",
+      "category": "gezegenler",
+      "title": "Dünya"
+    },
+    {
+      "id": "ge05",
+      "filename": "gezegenler-05.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-05.png",
+      "category": "gezegenler",
+      "title": "Mars"
+    },
+    {
+      "id": "ge06",
+      "filename": "gezegenler-06.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-06.png",
+      "category": "gezegenler",
+      "title": "Jüpiter"
+    },
+    {
+      "id": "ge07",
+      "filename": "gezegenler-07.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-07.png",
+      "category": "gezegenler",
+      "title": "Satürn"
+    },
+    {
+      "id": "ge08",
+      "filename": "gezegenler-08.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-08.png",
+      "category": "gezegenler",
+      "title": "Uranüs"
+    },
+    {
+      "id": "ge09",
+      "filename": "gezegenler-09.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-09.png",
+      "category": "gezegenler",
+      "title": "Neptün"
+    },
+    {
+      "id": "ge10",
+      "filename": "gezegenler-10.png",
+      "path": "/stock-coloring/gezegenler/gezegenler-10.png",
+      "category": "gezegenler",
+      "title": "Ay"
+    }
+  ]
+}
+,
+  {
+  "id": "alphabet",
+  "name": "Alphabet",
+  "emoji": "🔤",
+  "images": [
+    {
+      "id": "enA",
+      "filename": "alphabet-A.png",
+      "path": "/stock-coloring/alphabet/alphabet-A.png",
+      "category": "alphabet",
+      "title": "A - Apple"
+    },
+    {
+      "id": "enB",
+      "filename": "alphabet-B.png",
+      "path": "/stock-coloring/alphabet/alphabet-B.png",
+      "category": "alphabet",
+      "title": "B - Ball"
+    },
+    {
+      "id": "enC",
+      "filename": "alphabet-C.png",
+      "path": "/stock-coloring/alphabet/alphabet-C.png",
+      "category": "alphabet",
+      "title": "C - Cat"
+    },
+    {
+      "id": "enD",
+      "filename": "alphabet-D.png",
+      "path": "/stock-coloring/alphabet/alphabet-D.png",
+      "category": "alphabet",
+      "title": "D - Dog"
+    },
+    {
+      "id": "enE",
+      "filename": "alphabet-E.png",
+      "path": "/stock-coloring/alphabet/alphabet-E.png",
+      "category": "alphabet",
+      "title": "E - Elephant"
+    },
+    {
+      "id": "enF",
+      "filename": "alphabet-F.png",
+      "path": "/stock-coloring/alphabet/alphabet-F.png",
+      "category": "alphabet",
+      "title": "F - Fish"
+    },
+    {
+      "id": "enG",
+      "filename": "alphabet-G.png",
+      "path": "/stock-coloring/alphabet/alphabet-G.png",
+      "category": "alphabet",
+      "title": "G - Giraffe"
+    },
+    {
+      "id": "enH",
+      "filename": "alphabet-H.png",
+      "path": "/stock-coloring/alphabet/alphabet-H.png",
+      "category": "alphabet",
+      "title": "H - House"
+    },
+    {
+      "id": "enI",
+      "filename": "alphabet-I.png",
+      "path": "/stock-coloring/alphabet/alphabet-I.png",
+      "category": "alphabet",
+      "title": "I - Ice Cream"
+    },
+    {
+      "id": "enJ",
+      "filename": "alphabet-J.png",
+      "path": "/stock-coloring/alphabet/alphabet-J.png",
+      "category": "alphabet",
+      "title": "J - Jellyfish"
+    },
+    {
+      "id": "enK",
+      "filename": "alphabet-K.png",
+      "path": "/stock-coloring/alphabet/alphabet-K.png",
+      "category": "alphabet",
+      "title": "K - Kite"
+    },
+    {
+      "id": "enL",
+      "filename": "alphabet-L.png",
+      "path": "/stock-coloring/alphabet/alphabet-L.png",
+      "category": "alphabet",
+      "title": "L - Lion"
+    },
+    {
+      "id": "enM",
+      "filename": "alphabet-M.png",
+      "path": "/stock-coloring/alphabet/alphabet-M.png",
+      "category": "alphabet",
+      "title": "M - Monkey"
+    },
+    {
+      "id": "enN",
+      "filename": "alphabet-N.png",
+      "path": "/stock-coloring/alphabet/alphabet-N.png",
+      "category": "alphabet",
+      "title": "N - Nest"
+    },
+    {
+      "id": "enO",
+      "filename": "alphabet-O.png",
+      "path": "/stock-coloring/alphabet/alphabet-O.png",
+      "category": "alphabet",
+      "title": "O - Orange"
+    },
+    {
+      "id": "enP",
+      "filename": "alphabet-P.png",
+      "path": "/stock-coloring/alphabet/alphabet-P.png",
+      "category": "alphabet",
+      "title": "P - Pizza"
+    },
+    {
+      "id": "enQ",
+      "filename": "alphabet-Q.png",
+      "path": "/stock-coloring/alphabet/alphabet-Q.png",
+      "category": "alphabet",
+      "title": "Q - Queen"
+    },
+    {
+      "id": "enR",
+      "filename": "alphabet-R.png",
+      "path": "/stock-coloring/alphabet/alphabet-R.png",
+      "category": "alphabet",
+      "title": "R - Rabbit"
+    },
+    {
+      "id": "enS",
+      "filename": "alphabet-S.png",
+      "path": "/stock-coloring/alphabet/alphabet-S.png",
+      "category": "alphabet",
+      "title": "S - Sun"
+    },
+    {
+      "id": "enT",
+      "filename": "alphabet-T.png",
+      "path": "/stock-coloring/alphabet/alphabet-T.png",
+      "category": "alphabet",
+      "title": "T - Tree"
+    },
+    {
+      "id": "enU",
+      "filename": "alphabet-U.png",
+      "path": "/stock-coloring/alphabet/alphabet-U.png",
+      "category": "alphabet",
+      "title": "U - Umbrella"
+    },
+    {
+      "id": "enV",
+      "filename": "alphabet-V.png",
+      "path": "/stock-coloring/alphabet/alphabet-V.png",
+      "category": "alphabet",
+      "title": "V - Violin"
+    },
+    {
+      "id": "enW",
+      "filename": "alphabet-W.png",
+      "path": "/stock-coloring/alphabet/alphabet-W.png",
+      "category": "alphabet",
+      "title": "W - Whale"
+    },
+    {
+      "id": "enX",
+      "filename": "alphabet-X.png",
+      "path": "/stock-coloring/alphabet/alphabet-X.png",
+      "category": "alphabet",
+      "title": "X - Xylophone"
+    },
+    {
+      "id": "enY",
+      "filename": "alphabet-Y.png",
+      "path": "/stock-coloring/alphabet/alphabet-Y.png",
+      "category": "alphabet",
+      "title": "Y - Yacht"
+    },
+    {
+      "id": "enZ",
+      "filename": "alphabet-Z.png",
+      "path": "/stock-coloring/alphabet/alphabet-Z.png",
+      "category": "alphabet",
+      "title": "Z - Zebra"
+    }
+  ]
+}
 ];
 
 export function getStockCategory(id: string): StockCategory | undefined {

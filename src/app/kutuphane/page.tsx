@@ -10,16 +10,23 @@ import { useTranslation } from '@/lib/i18n';
 export default function KutuphanePage() {
   const { t, locale } = useTranslation();
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState(STOCK_CATEGORIES[0]?.id || '');
+  // Filter categories by locale: show 'alfabe' for TR, 'alphabet' for EN
+  const filteredCategories = STOCK_CATEGORIES.filter((c) => {
+    if (c.id === 'alfabe' && locale === 'en') return false;
+    if (c.id === 'alphabet' && locale === 'tr') return false;
+    return true;
+  });
 
-  const category = STOCK_CATEGORIES.find((c) => c.id === activeCategory);
+  const [activeCategory, setActiveCategory] = useState(filteredCategories[0]?.id || '');
+
+  const category = filteredCategories.find((c) => c.id === activeCategory) || filteredCategories[0];
 
   const handleSelectImage = (imagePath: string) => {
     localStorage.setItem('boyaai-current-image', imagePath);
     router.push('/boya?source=generated');
   };
 
-  if (STOCK_CATEGORIES.length === 0) {
+  if (filteredCategories.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
         <div className="text-6xl mb-4">📚</div>
@@ -51,7 +58,7 @@ export default function KutuphanePage() {
       {/* Category tabs */}
       <div className="overflow-x-auto pb-2 mb-6 -mx-4 px-4">
         <div className="flex gap-2 min-w-max">
-          {STOCK_CATEGORIES.map((cat) => (
+          {filteredCategories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
