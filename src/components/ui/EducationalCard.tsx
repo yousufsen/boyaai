@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { EducationalFact } from '@/constants/educationalFacts';
 import { useTranslation } from '@/lib/i18n';
@@ -16,23 +16,7 @@ export function EducationalCard({ fact, title, onClose }: EducationalCardProps) 
   const [showFunFact, setShowFunFact] = useState(false);
 
   const mainFact = locale === 'en' ? fact.factEn : fact.factTr;
-  const funFact = locale === 'en' ? fact.funFactEn : fact.funFactEn;
   const funFactText = locale === 'en' ? fact.funFactEn : fact.funFactTr;
-
-  const speak = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = locale === 'en' ? 'en-US' : 'tr-TR';
-    utterance.rate = 0.9;
-    // Prefer female voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(
-      (v) => v.lang.startsWith(locale === 'en' ? 'en' : 'tr') && v.name.toLowerCase().includes('female')
-    ) || voices.find((v) => v.lang.startsWith(locale === 'en' ? 'en' : 'tr'));
-    if (preferred) utterance.voice = preferred;
-    window.speechSynthesis.speak(utterance);
-  }, [locale]);
 
   return (
     <AnimatePresence>
@@ -70,23 +54,14 @@ export function EducationalCard({ fact, title, onClose }: EducationalCardProps) 
         </AnimatePresence>
 
         {/* Actions */}
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => setShowFunFact(!showFunFact)}
-            className="flex-1 px-2 py-1.5 rounded-xl bg-white/80 text-[10px] font-bold text-purple-600 hover:bg-purple-100 transition-all"
-          >
-            {showFunFact
-              ? (locale === 'en' ? '↩ Go Back' : '↩ Geri')
-              : (locale === 'en' ? '✨ Fun Fact' : '✨ Eğlenceli Bilgi')}
-          </button>
-          <button
-            onClick={() => speak(showFunFact ? funFactText : mainFact)}
-            title={locale === 'en' ? 'Read aloud' : 'Sesli oku'}
-            className="w-8 h-8 rounded-xl bg-white/80 flex items-center justify-center text-sm hover:bg-purple-100 transition-all"
-          >
-            🔊
-          </button>
-        </div>
+        <button
+          onClick={() => setShowFunFact(!showFunFact)}
+          className="w-full px-2 py-1.5 rounded-xl bg-white/80 text-[10px] font-bold text-purple-600 hover:bg-purple-100 transition-all"
+        >
+          {showFunFact
+            ? (locale === 'en' ? '↩ Go Back' : '↩ Geri')
+            : (locale === 'en' ? '✨ Fun Fact' : '✨ Eğlenceli Bilgi')}
+        </button>
       </motion.div>
     </AnimatePresence>
   );
