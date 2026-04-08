@@ -1,6 +1,6 @@
 export const tr = {
   common: {
-    appName: 'BoyaAI',
+    appName: 'ColorWish',
     loading: 'Yükleniyor...',
     save: 'Kaydet',
     cancel: 'Vazgeç',
@@ -42,7 +42,7 @@ export const tr = {
     recentTitle: 'Son Eserlerin 🎨',
     recentSub: 'En son boyadığın resimler',
     viewAll: 'Tümünü Gör',
-    footer: '🎨 BoyaAI ile hayal gücünü keşfet! 🌈',
+    footer: '🎨 ColorWish ile hayal gücünü keşfet! 🌈',
     startButton: '🚀 Hayalini Çiz!',
     galleryButton: '🖼️ Galeriye Bak',
   },

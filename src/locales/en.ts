@@ -1,6 +1,6 @@
 export const en = {
   common: {
-    appName: 'BoyaAI',
+    appName: 'ColorWish',
     loading: 'Loading...',
     save: 'Save',
     cancel: 'Cancel',
@@ -42,7 +42,7 @@ export const en = {
     recentTitle: 'Your Recent Artworks 🎨',
     recentSub: 'Your latest paintings',
     viewAll: 'View All',
-    footer: '🎨 Discover your imagination with BoyaAI! 🌈',
+    footer: '🎨 Discover your imagination with ColorWish! 🌈',
     startButton: '🚀 Draw Your Dream!',
     galleryButton: '🖼️ View Gallery',
   },

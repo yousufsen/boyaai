@@ -67,12 +67,12 @@ export async function POST(request: Request) {
     }
 
     const imagePrompt = buildImagePrompt(prompt.trim());
-    console.log('[BoyaAI] Prompt:', imagePrompt);
+    console.log('[ColorWish] Prompt:', imagePrompt);
 
     // Check API key
     const apiKey = process.env.OPENAI_API_KEY?.trim();
     if (!apiKey) {
-      console.warn('[BoyaAI] OPENAI_API_KEY not set — using mock images');
+      console.warn('[ColorWish] OPENAI_API_KEY not set — using mock images');
       return serveMock();
     }
 
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        console.log(`[BoyaAI] Calling OpenAI gpt-image-1-mini (attempt ${attempt + 1})...`);
+        console.log(`[ColorWish] Calling OpenAI gpt-image-1-mini (attempt ${attempt + 1})...`);
         const response = await openai.images.generate({
           model: 'gpt-image-1-mini',
           prompt: imagePrompt,
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
 
         const imageData = response.data?.[0];
         if (!imageData) {
-          console.error('[BoyaAI] No image data in response');
+          console.error('[ColorWish] No image data in response');
           return serveMock();
         }
 
@@ -100,23 +100,23 @@ export async function POST(request: Request) {
 
         if (imageData.b64_json) {
           rawBuffer = Buffer.from(imageData.b64_json, 'base64');
-          console.log('[BoyaAI] Got base64 image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
+          console.log('[ColorWish] Got base64 image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
         } else if (imageData.url) {
-          console.log('[BoyaAI] Got image URL, fetching...');
+          console.log('[ColorWish] Got image URL, fetching...');
           const imgRes = await fetch(imageData.url);
           if (!imgRes.ok) {
-            console.error('[BoyaAI] Failed to fetch image URL:', imgRes.status);
+            console.error('[ColorWish] Failed to fetch image URL:', imgRes.status);
             return serveMock();
           }
           rawBuffer = Buffer.from(await imgRes.arrayBuffer());
-          console.log('[BoyaAI] Fetched image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
+          console.log('[ColorWish] Fetched image:', (rawBuffer.length / 1024).toFixed(0), 'KB');
         } else {
-          console.error('[BoyaAI] No image URL or b64_json in response');
+          console.error('[ColorWish] No image URL or b64_json in response');
           return serveMock();
         }
 
         const processed = await postProcess(rawBuffer);
-        console.log('[BoyaAI] Processed:', (processed.length / 1024).toFixed(0), 'KB');
+        console.log('[ColorWish] Processed:', (processed.length / 1024).toFixed(0), 'KB');
 
         incrementUsage(ip);
 
@@ -124,11 +124,11 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, imageUrl: dataUrl, source: 'ai' });
       } catch (err) {
         if (err instanceof OpenAI.APIError) {
-          console.error(`[BoyaAI] OpenAI API hatası: ${err.status} ${err.message}`);
+          console.error(`[ColorWish] OpenAI API hatası: ${err.status} ${err.message}`);
 
           if (err.status === 429) {
             if (attempt === 0) {
-              console.log('[BoyaAI] Rate limited, 10 saniye bekleyip tekrar deneniyor...');
+              console.log('[ColorWish] Rate limited, 10 saniye bekleyip tekrar deneniyor...');
               await new Promise((r) => setTimeout(r, 10000));
               continue; // retry
             }
@@ -158,14 +158,14 @@ export async function POST(request: Request) {
           );
         }
 
-        console.error('[BoyaAI] Beklenmeyen hata:', err);
+        console.error('[ColorWish] Beklenmeyen hata:', err);
         return serveMock();
       }
     }
 
     return serveMock();
   } catch (err) {
-    console.error('[BoyaAI] Outer error:', err);
+    console.error('[ColorWish] Outer error:', err);
     return NextResponse.json(
       { success: false, error: 'Bir hata oluştu. Lütfen tekrar deneyin.' },
       { status: 500 }
@@ -195,6 +195,6 @@ async function postProcess(rawBuffer: Buffer): Promise<Buffer> {
 
 function serveMock() {
   const idx = Math.floor(Math.random() * MOCK_COLORING_IMAGES.length);
-  console.log('[BoyaAI] Mock fallback:', MOCK_COLORING_IMAGES[idx]);
+  console.log('[ColorWish] Mock fallback:', MOCK_COLORING_IMAGES[idx]);
   return NextResponse.json({ success: true, imageUrl: MOCK_COLORING_IMAGES[idx], source: 'mock' });
 }

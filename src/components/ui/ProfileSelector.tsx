@@ -44,7 +44,7 @@ export function ProfileSelector() {
       >
         <div className="text-6xl mb-4">🎨</div>
         <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400 bg-clip-text text-transparent mb-2">
-          BoyaAI
+          ColorWish
         </h1>
         <p className="text-xl font-bold text-purple-600 mb-10">{t('profile.whoColors')}</p>
 

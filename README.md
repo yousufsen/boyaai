@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 ColorWish — Wish it. Color it.
+
+AI-powered coloring app for kids. Describe a scene, AI creates a coloring page, kids color it on canvas.
+
+Çocuklar için yapay zeka destekli boyama uygulaması. Hayal et, dile, boya!
+
+## Features
+
+- 🤖 AI-generated coloring pages (OpenAI gpt-image-1-mini)
+- 🖌️ Canvas painting engine (brush, fill, eraser, zoom)
+- 📚 100+ stock coloring pages (10 categories)
+- 🔤 Educational categories (Alphabet TR/EN, Numbers, Planets)
+- ✏️ Free drawing mode
+- 🎤 Voice input (Web Speech API)
+- 👨‍👩‍👧 Parent panel with PIN protection
+- 🌍 Bilingual (Turkish + English)
+- 📱 Responsive (mobile + desktop)
+
+## Tech Stack
+
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS + Framer Motion
+- Zustand (state management)
+- OpenAI API (image generation)
+- Sharp (image post-processing)
+- Web Speech API (voice input)
+- Canvas API (painting engine)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
+cp .env.example .env.local  # Add your OpenAI API key
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Generate Stock Coloring Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+node scripts/generate-stock.js          # 100 base images
+node scripts/generate-educational.js    # Alphabet, Numbers, Planets
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

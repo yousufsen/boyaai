@@ -11,8 +11,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "BoyaAI - Hayal Et, Boya!",
-  description: "Çocuklar için yapay zeka destekli boyama sayfası uygulaması",
+  title: "ColorWish - Wish it. Color it.",
+  description: "Çocuklar için yapay zeka destekli boyama uygulaması. Hayal et, dile, boya! | AI-powered coloring app for kids.",
 };
 
 export default function RootLayout({
